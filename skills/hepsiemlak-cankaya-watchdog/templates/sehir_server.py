@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Çankaya Konut Haritası — Server (Python stdlib, no Flask required)"""
+"""🏙️ Şehir Emlak Haritası — Server (Python stdlib, no Flask required)
+
+HERHANGİ bir şehir/ilçe için çalışır. Aşağıdaki CONFIG sözlüğünü kendi şehrinize göre düzenleyin:
+- SEHIR_ADI  : Bildirimlerde/başlıkta görünen ad (örn. "İzmir", "Antalya")
+- ILCE       : HepsiEmlak ilçe slug'ı (örn. "konak", "muratpasa") — boş bırakılırsa tüm ilçeler
+- WORK_LAT/LON : Mesafe puanı hesaplanan referans noktası (ev/iş yeri koordinatı)
+- DB         : SQLite dosya yolu (hepsiemlak-fetch-template.py ile aynı olmalı)
+- PORT       : Yerel web paneli portu
+"""
 
 import json
 import os
@@ -8,8 +16,22 @@ import urllib.parse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from math import radians, cos, sin, asin, sqrt
 
-DB = os.path.expanduser("~/.hermes/hepsiemlak.db")
-WORK_LAT, WORK_LON = 39.8897782, 32.8594033
+# ================= KONFİGÜRASYON (şehrinize göre düzenleyin) =================
+CONFIG = {
+    "SEHIR_ADI": "Ankara",          # örn. "İzmir", "Antalya", "Bursa"
+    "ILCE": "cankaya",              # örn. "konak", "muratpasa" — boş = tüm ilçeler
+    "WORK_LAT": 39.8897782,         # referans noktası (ev/iş)
+    "WORK_LON": 32.8594033,
+    "DB": os.path.expanduser("~/.hermes/hepsiemlak.db"),
+    "PORT": 8200,
+    "HTML_DOSYASI": "sehir_harita.html",  # bu template ile aynı dizinde olmalı
+}
+# ============================================================================
+
+WORK_LAT = CONFIG["WORK_LAT"]
+WORK_LON = CONFIG["WORK_LON"]
+DB = CONFIG["DB"]
+SEHIR_ADI = CONFIG["SEHIR_ADI"]
 
 def haversine_km(lat1, lon1, lat2, lon2):
     R = 6371
@@ -48,13 +70,18 @@ class Handler(SimpleHTTPRequestHandler):
         self.wfile.write(json.dumps(data, ensure_ascii=False).encode())
 
     def send_html(self):
-        html_path = os.path.join(os.path.dirname(__file__), 'cankaya_harita.html')
+        html_path = os.path.join(os.path.dirname(__file__), CONFIG["HTML_DOSYASI"])
         if os.path.exists(html_path):
             self.send_response(200)
             self.send_header('Content-Type', 'text/html; charset=utf-8')
             self.end_headers()
             with open(html_path, 'rb') as f:
-                self.wfile.write(f.read())
+                html = f.read().decode('utf-8')
+            # Placeholder'ları config'den doldur
+            html = html.replace('__SEHIR_ADI__', SEHIR_ADI)
+            html = html.replace('__WORK_LAT__', str(WORK_LAT))
+            html = html.replace('__WORK_LON__', str(WORK_LON))
+            self.wfile.write(html.encode('utf-8'))
         else:
             self.send_error(404, "HTML dosyası bulunamadı")
 
@@ -81,6 +108,7 @@ class Handler(SimpleHTTPRequestHandler):
         conn.close()
         stats['work_lat'] = WORK_LAT
         stats['work_lon'] = WORK_LON
+        stats['sehir'] = SEHIR_ADI
         return stats
 
     def get_neighborhoods(self):
@@ -150,9 +178,9 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    port = 8200
+    port = CONFIG["PORT"]
     server = HTTPServer(('0.0.0.0', port), Handler)
-    print(f"🚀 Çankaya Konut Haritası: http://localhost:{port}")
+    print(f"🚀 {SEHIR_ADI} Konut Haritası: http://localhost:{port}")
     print(f"   API: http://localhost:{port}/api/neighborhoods")
     print(f"        http://localhost:{port}/api/listings?limit=10&offset=0&sort=score&order=desc")
     print(f"        http://localhost:{port}/api/stats")

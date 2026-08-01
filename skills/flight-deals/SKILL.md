@@ -1,13 +1,13 @@
 ---
 name: flight-deals
-description: "Search cheap flight deals via FlightList.io (Kiwi.com proxy API). Query Ankara (ESB) departures with full URL params and JSON response structure documented."
-version: 2.2.0
+description: "Search cheap flight deals via FlightList.io (Kiwi.com proxy API). Query ANY Turkish airport (IST, SAW, ESB, ADB, AYT, DLM...) with full URL params and JSON response structure documented. City/airport codes for all 81 provinces in references/turkiye-havalimanlari.md."
+version: 3.0.0
 author: BatuBOT
 ---
 
-# Flight Deals (FlightList.io / Kiwi API)
+# Flight Deals (FlightList.io / Kiwi API) — Tüm Türkiye
 
-Search flight deals using the FlightList.io API — a proxy over Kiwi.com's Tequila API. Returns clean JSON with pricing, routes, airlines, and durations.
+Search flight deals using the FlightList.io API — a proxy over Kiwi.com's Tequila API. Returns clean JSON with pricing, routes, airlines, and durations. **Türkiye'deki herhangi bir havalimanından çıkış desteklenir** — `fly_from`'a kendi şehrinizin IATA kodunu verin (tam liste: `references/turkiye-havalimanlari.md`).
 
 ## Endpoint
 
@@ -21,7 +21,7 @@ GET https://www.flightlist.io/api/search.php
 
 | Param | Example | Meaning |
 |-------|---------|---------|
-| `fly_from` | `airport:ESB` | Origin — prefix with `airport:` for IATA code, or `city:` for city code |
+| `fly_from` | `airport:ESB` | Origin — prefix with `airport:` for IATA code, or `city:` for city code. **Türkiye için:** `airport:IST`, `airport:SAW`, `airport:ESB`, `airport:ADB`, `airport:AYT`... (tam liste: `references/turkiye-havalimanlari.md`) |
 | `fly_to` | `city:LON` | Destination — same prefix logic. Also accepts comma-separated ISO country codes (e.g. `AT,BE,BG,...`) for area searches |
 
 ### Outbound Date Range (when the outbound flight can depart)
@@ -241,8 +241,8 @@ See `templates/cron-job-prompt.md` for reusable prompt template. Key rules:
 When `flight_type=return` returns 0 results but individual one-way searches work, the Kiwi API may be failing due to route complexity (virtual interlining in both directions, 3+ stopovers, obscure city pairs like Ankara→Guatemala City). Workaround:
 
 1. **Search two one-way legs separately** with `flight_type=oneway`:
-   - Outbound: `fly_from=airport:ESB&fly_to=airport:GUA&date_from=...&date_to=...`
-   - Return: `fly_from=airport:GUA&fly_to=airport:ESB&date_from=...&date_to=...`
+   - Outbound: `fly_from=airport:{FROM}&fly_to=airport:{TO}&date_from=...&date_to=...`
+   - Return: `fly_from=airport:{TO}&fly_to=airport:{FROM}&date_from=...&date_to=...`
 2. **Parse both JSON responses**, build arrays of outbound/inbound flights with arrival/departure datetimes
 3. **Combine manually**: iterate every outbound × inbound pair, compute `stay_nights = (inbound_departure - outbound_arrival).days`, filter by desired range
 4. **Sum prices** for total round-trip cost
@@ -251,7 +251,9 @@ When `flight_type=return` returns 0 results but individual one-way searches work
 
 ## 📦 GitHub Yedekleme
 
-Bu skill GitHub'da yedeklenir: https://github.com/bthnbdk/hermes-skills
+Bu skill GitHub'da yedeklenir:
+- TR koleksiyonu: https://github.com/bthnbdk/hermes-skills-TR
+- Ana koleksiyon: https://github.com/bthnbdk/hermes-skills
 
 Güncelleme için:
 ```bash
@@ -279,10 +281,22 @@ Region presets: saved in `references/region-presets.csv`. Key presets:
 | `south-asia` | AF, BD, BT, IN, LK, MV, NP, PK |
 | `southeast-asia` | BN, ID, KH, LA, MM, MY, PH, SG, TH, TL, VN |
 | `east-asia` | CN, HK, JP, KR, MN, TW |
-| `cheap-from-ankara` | AT, DE, HU, GB, RO, NL, PL, IT, BG |
+| `cheap-from-tr` | AT, DE, HU, GB, RO, NL, PL, IT, BG (Türkiye'den ucuz rotalar örneği) |
 | `anywhere` | All 195 countries |
 
-## Known Cheap Destinations from Ankara (One-Way)
+## Türkiye Havalimanları
+
+Tüm Türkiye havalimanları IATA kodları ve şehir kodları: `references/turkiye-havalimanlari.md`
+
+Popüler çıkış noktaları:
+- **İstanbul:** `airport:IST` (ana hub) veya `airport:SAW` (Sabiha Gökçen) veya `city:IST` (ikisi birden)
+- **Ankara:** `airport:ESB`
+- **İzmir:** `airport:ADB`
+- **Antalya:** `airport:AYT` veya `city:AYT` (AYT + GZP)
+- **Muğla:** `airport:DLM` (Dalaman) veya `airport:BJV` (Bodrum)
+- **Trabzon:** `airport:TZX`
+
+## Known Cheap Destinations from Turkey (Örnek — Ankara Çıkışlı Tek Yön)
 
 | # | Destination | Price | Direct | Airline |
 |---|------------|------:|:------:|:-------:|
@@ -290,6 +304,8 @@ Region presets: saved in `references/region-presets.csv`. Key presets:
 | 2 | Bucharest 🇷🇴 | 3,196 ₺ | ✅ | AJet |
 | 3 | Tirana 🇦🇱 | 3,196 ₺ | ✅ | AJet |
 | 4–15 | Various European cities | 3,650–5,332 ₺ | ✅ | AJet/Pegasus/SunExpress |
+
+> 💡 Bu liste örnektir — çıkış havalimanına göre değişir. İstanbul (IST/SAW) ve İzmir (ADB) çıkışlı rotalar genelde daha fazla ve daha ucuz seçenek sunar. Kendi şehriniz için her zaman canlı arama yapın.
 
 ## Steps to Search
 

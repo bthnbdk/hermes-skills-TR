@@ -1,13 +1,31 @@
 ---
 name: hepsiemlak-cankaya-watchdog
-description: "Monitor new property listings on HepsieEmlak for any city/district in Turkey. Reusable — configure filters, mahalle list, and cron job for any location. Uses Python stdlib urllib, no external deps. SQLite-backed with AI scoring."
-version: 3.4.0
+description: "Monitor new property listings on HepsieEmlak for ANY city/district in Turkey. Reusable — configure {sehir}/{ilce} slugs, mahalle list, max price, work coordinates, and cron job for any location. Uses Python stdlib urllib, no external deps. SQLite-backed with AI scoring."
+version: 4.0.0
 author: Batu
 ---
 
-# HepsieEmlak Emlak Watchdog (Generic)
+# HepsiEmlak Emlak Watchdog (Tüm Türkiye)
 
-HepsiEmlak API'sinden herhangi bir il/ilçede satılık konut ilanlarını kontrol eden `no_agent` cron job sistemi. Python stdlib ile çalışır — requests/curl_cffi/Playwright gerektirmez.
+HepsiEmlak API'sinden **herhangi bir il/ilçede** satılık konut ilanlarını kontrol eden `no_agent` cron job sistemi. Python stdlib ile çalışır — requests/curl_cffi/Playwright gerektirmez. Şehir seçimi tamamen size bağlı: `SEHIR` ve `ILCE` değişkenlerini değiştirip 5 dakikada yeni bir lokasyonda çalıştırabilirsiniz.
+
+## 🎯 Şehir Yapılandırması (İlk Adım)
+
+| Değişken | Örnek | Açıklama |
+|----------|-------|----------|
+| `SEHIR` | `ankara`, `istanbul`, `izmir`, `antalya`, `bursa`... | HepsiEmlak şehir slug'ı (81 il: `references/turkiye-sehirleri.csv`) |
+| `ILCE` | `cankaya`, `konak`, `muratpasa`... veya `""` | İlçe slug'ı — boş = tüm ilçeler |
+| `MAX_PRICE` | `8000000` | Maks fiyat (TL) — şehrin piyasasına göre ayarlayın |
+| `WORK_LAT/LON` | `39.8897782, 32.8594033` | Mesafe puanı referans noktası (ev/iş yeri koordinatı) |
+| `EXCLUDED` | `{"Ümitköy", ...}` | Hariç tutulacak mahalleler (set) |
+| `DB` | `~/.hermes/hepsiemlak.db` | SQLite dosyası — şehir başına ayrı dosya önerilir |
+
+**Tüm 81 il için slug listesi:** arsa-watchdog skill'indeki `references/turkiye-sehirleri.csv` dosyasını da kullanabilirsiniz (aynı slug formatı).
+
+Kurulum örneği — İzmir Konak için:
+```
+HepsiEmlak İzmir Konak'ta 3+1, 5 milyon TL altı yeni satılık ilanları takip et — her 3 saatte kontrol et
+```
 
 ## 🧠 API Response Structure (DOĞRULANMIŞ)
 
@@ -145,11 +163,11 @@ full_url = f"https://www.hepsiemlak.com/{detail}"
 | `references/api-response-reference.md` | Gerçek API response örneği + tüm 64 field |
 | `references/github-backup.md` | GitHub yedekleme detayları |
 | `references/yatirim-monitoring.md` | Yatırımlık daire takibi + OSM/kire analizi |
-| `templates/hepsiemlak-fetch-template.py` | Yeni lokasyon için kopyalanabilir script şablonu |
-| `templates/cankaya_server.py` | Leaflet+OSM harita backend (Python stdlib http.server) |
-| `templates/cankaya_harita.html` | Leaflet.js frontend — renkli mahalle daireleri, side panel, mesafe |
 | `references/web-visualization.md` | Leaflet+Chart.js web arayüzü detayları: API endpoints, 4 tab, trend/bargains, weekly report |
-| `scripts/hepsiemlak_fetch.py` | Canlı script — Çankaya konut (`~/.hermes/scripts/` altında) |
+| `templates/hepsiemlak-fetch-template.py` | Yeni lokasyon için kopyalanabilir script şablonu (SEHIR/ILCE değişkenleri) |
+| `templates/sehir_server.py` | Leaflet+OSM harita backend — **CONFIG sözlüğü ile her şehre uyarlanır** |
+| `templates/sehir_harita.html` | Leaflet.js frontend — `__SEHIR_ADI__`/`__WORK_LAT__`/`__WORK_LON__` placeholder'ları server tarafından doldurulur |
+| `scripts/hepsiemlak_fetch.py` | Canlı script — örnek Çankaya konut (`~/.hermes/scripts/` altında) |
 | `scripts/haftalik_piyasa_raporu.py` | Haftalık pazar raporu scripti (cron job, her Pazartesi 09:00) |
 
 ## 🤖 Cron Job Kurulumu (no_agent mode)
@@ -162,7 +180,7 @@ full_url = f"https://www.hepsiemlak.com/{detail}"
 
 Komut:
 ```
-cronjob(action='create', name='HepsiEmlak X', script='hepsiemlak_fetch.py',
+cronjob(action='create', name='HepsiEmlak {SEHIR} {ILCE}', script='hepsiemlak_fetch.py',
         no_agent=True, schedule='0 */3 * * *',
         deliver='telegram:-1003839224584', workdir='/home/batu/.hermes')
 ```
@@ -180,22 +198,20 @@ Kural:
 
 **Batu'nun net talebi:** "Bunu böyle verme. Doğrudan analiz edip ver. Aynen Ankara'daki ev arama bildirimi gibi"
 
-### Çankaya Job (mevcut)
+### Örnek Job (her şehir için farklı script + job oluşturun)
 
 | Özellik | Değer |
 |---------|-------|
-| Job ID | `105149468903` |
-| Script | `hepsiemlak_fetch.py` |
+| Script | `hepsiemlak_fetch.py` (kendi şehriniz için kopyalayın: `hepsiemlak_izmir_fetch.py` vb.) |
 | Schedule | `0 */3 * * *` (her 3 saat) |
 | Mode | `no_agent: true` |
-| Deliver | `telegram:-1003839224584` |
+| Deliver | `telegram:-1003839224584` (kendi kanalınız) |
 | Workdir | `/home/batu/.hermes` |
 
 ### Haftalık Rapor Job
 
 | Özellik | Değer |
 |---------|-------|
-| Job ID | `f4ae514a2470` |
 | Script | `haftalik_piyasa_raporu.py` |
 | Schedule | `0 9 * * 1` (Pazartesi 09:00) |
 | Mode | `no_agent: true` |
@@ -206,17 +222,17 @@ Kural:
 
 | Param | Anlamı |
 |-------|--------|
-| `counties` | İlçe adı (İngilizce: cankaya) |
+| `counties` | İlçe adı (İngilizce: cankaya, konak, muratpasa) |
 | `intent` | `satilik` veya `kiralik` |
 | `mainCategory` | `konut` veya `isyeri` |
 | `availableForLoanStatus` | `APPLICABLE` (krediye uygun) |
-| `p32` | `6500000` | Maks fiyat (TL) |
+| `p32` | Maks fiyat (TL) |
 | `sortField` | `UPDATED_DATE` veya `PRICE` |
 | `pageSize` | **Çalışmaz!** API her zaman 24 döndürür |
 
 ## 🗄️ SQLite Veritabanı
 
-**Dosya:** `~/.hermes/hepsiemlak.db`
+**Dosya:** `~/.hermes/hepsiemlak_{sehir}_{ilce}.db` (örn: `hepsiemlak_izmir_konak.db` — her lokasyon için ayrı dosya önerilir)
 
 ### Tablolar
 
@@ -266,7 +282,7 @@ SELECT id, raw_data FROM listings;
 
 | # | Kriter | Ağırlık | Formül |
 |---|--------|:-------:|--------|
-| 1 | 💰 Fiyat | 0-20 | **Bütçe (0-15):** 2M=15p, 6.5M=0p · **Piyasa (0-5):** mahalle m² fiyat ortalamasına göre |
+| 1 | 💰 Fiyat | 0-20 | **Bütçe (0-15):** şehre göre alt/üst sınır ayarlanır · **Piyasa (0-5):** mahalle m² fiyat ortalamasına göre |
 | 2 | 📍 Mesafe | 0-30 | 0km=30p, 5km=0p, **mahalle referansı** |
 | 3 | 🏢 Kat | 0-12 | Bodrum=0, 8+Kat=12 |
 | 4 | 🛏️ Oda | 0-12 | 3+1=12, 2+1=8, 1+1=2 |
@@ -308,10 +324,10 @@ if ref:
     dist = haversine_km(WORK_LAT, WORK_LON, ref[0], ref[1])
 ```
 
-### İş Yeri Koordinatı
+### İş Yeri / Referans Koordinatı
 
 ```python
-WORK_LAT, WORK_LON = 39.8897782, 32.8594033  # Batu'nun iş yeri (Ankara)
+WORK_LAT, WORK_LON = 39.8897782, 32.8594033  # ← kendi eviniz/iş yeriniz ile değiştirin
 ```
 
 Haversine formülü ile km cinsinden mesafe.
@@ -359,8 +375,8 @@ Highlight kuralları:
 Fiyat skoru iki bileşenden oluşur: **Bütçe (0-15)** + **Piyasa kıyası (0-5)**.
 
 ```python
-# Bütçe: 2M=15p, 6.5M=0p
-budget_score = max(0, min(15, 15 - (price - 2_000_000) / 300_000))
+# Bütçe: alt/üst sınır şehre göre (örn. 2M=15p, 6.5M=0p)
+budget_score = max(0, min(15, 15 - (price - MIN_PRICE) / ((MAX_PRICE - MIN_PRICE) / 15)))
 
 # Piyasa: mahalle m² ortalamasına göre
 AVG(CAST(price AS REAL) / NULLIF(gross_sqm, 0)) GROUP BY neighborhood
@@ -370,21 +386,24 @@ diff_pct = (listing_pps - avg_pps) / avg_pps * 100
 
 Kat kısaltmaları: `Floor` → `K`, `Underground` → `Bodrum`, `Garden` → `Bahçe`, `Ground` → `Giriş`, `Raised` → `Yükseltilmiş`
 
-## 🗺️ Çankaya Filtreleri (Referans)
+## 🗺️ Mahalle Filtreleri (Örnek — Ankara Çankaya)
 
 **Hariç (dış mahalleler):** Ümitköy, Çayyolu, Alacaatlı, Karapınar, Bayraktar, Yukarı Dikmen, Mutlukent, Prof. Dr. Ahmet Taner Kışlalı, 100. Yıl, Hilal
 
 **Merkez mahalleler:** Küçükesat, Mürsel Uluç, Gökkuşağı, İlkadım, Birlik, Ertuğrulgazi, Keklik Pınarı, Tınaztepe, Kırkkonaklar, Fidanlık, Muhsin Ertuğrul, İleri, Bahçelievler, Kızılay, Maltepe, Kültür, Yıldızevler, Gaziosmanpaşa, Çankaya, Huzur, Ayrancı, Çamlıtepe, Aşıkpaşa, Çiğdem, Ön Cebeci, Seyranbağları, Eti, Barbaros, Naci Çakır, Şehit Cevdet Özdemir, Yukarı Bahçelievler, Harbiye, Öveçler
 
+> 💡 **Yeni şehir için:** `EXCLUDED` set'ine o şehrin uzak/dış mahallelerini, `preferred_neighborhoods` listesine merkez/tercih edilen mahallelerini yazın. Mahalle adlarını ilk çalıştırmada API response'undan alabilirsiniz (ilk taramada `district.name`'leri toplayın).
+
 ## 🌐 Web Görselleştirme Arayüzü (Leaflet + Chart.js)
 
-**Server:** `~/.hermes/cankaya_server.py` — Python stdlib ``http.server`` (Flask gerekmez).
-**Frontend:** `~/.hermes/cankaya_harita.html` — Leaflet.js + Esri World Topo Map + Chart.js.
+**Server:** `templates/sehir_server.py` — Python stdlib ``http.server`` (Flask gerekmez). **CONFIG sözlüğünü kendi şehrinize göre düzenleyin** (SEHIR_ADI, ILCE, WORK_LAT/LON, DB, PORT).
+**Frontend:** `templates/sehir_harita.html` — Leaflet.js + Esri World Topo Map + Chart.js. `__SEHIR_ADI__`, `__WORK_LAT__`, `__WORK_LON__` placeholder'ları server tarafından otomatik doldurulur.
 **Rapor:** `~/.hermes/scripts/haftalik_piyasa_raporu.py` — no_agent cron job.
 
 ### Başlatma
 ```bash
-cd ~/.hermes && python3 cankaya_server.py &   # port 8200
+cp templates/sehir_server.py templates/sehir_harita.html ~/.hermes/
+cd ~/.hermes && python3 sehir_server.py &   # port CONFIG'den (varsayılan 8200)
 ```
 Arka planda: terminal `background=true` ile çalıştır. Yeniden başlatırken `fuser -k 8200/tcp` ile eski PID'i öldür.
 
@@ -393,9 +412,9 @@ Arka planda: terminal `background=true` ile çalıştır. Yeniden başlatırken 
 | Endpoint | Dönüş | Açıklama |
 |----------|-------|----------|
 | `/` | HTML | Ana sayfa (Leaflet harita + 4 tab) |
-| `/api/stats` | JSON | Genel istatistik (toplam, ortalama fiyat/m²/puan) |
-| `/api/neighborhoods` | JSON | 90 mahalle: ortalama fiyat, m², puan, koordinat, işe uzaklık, yaş, yeni bina % |
-| `/api/listings/all` | JSON | Tüm ilanlar (1070 kayıt, client-side filter/sort) |
+| `/api/stats` | JSON | Genel istatistik (toplam, ortalama fiyat/m²/puan, şehir adı) |
+| `/api/neighborhoods` | JSON | Mahalleler: ortalama fiyat, m², puan, koordinat, referansa uzaklık, yaş, yeni bina % |
+| `/api/listings/all` | JSON | Tüm ilanlar (client-side filter/sort) |
 | `/api/trend` | JSON | Günlük fiyat trendi (price_history'den) |
 | `/api/bargains` | JSON | Fiyat düşen ilanlar (price_history × listings JOIN) |
 
@@ -405,7 +424,7 @@ Arka planda: terminal `background=true` ile çalıştır. Yeniden başlatırken 
 - **Mahalle daireleri:** Renkli yarı-saydam circle marker. **İsim etiketi yok** — sadece hover tooltip. Karmaşa olmamalı.
 - **Renk skalası:** m² fiyatı: yeşil (<40K) → turuncu (50-60K) → kırmızı (70K+).
 - **Daire büyüklüğü:** İlan sayısına göre (8-32px radius).
-- **İş yeri:** Mavi nokta + "📍 İş" tooltip.
+- **Referans noktası:** Mavi nokta + "📍 Referans" tooltip.
 
 ### 4 Tab Sistemi
 
@@ -414,12 +433,12 @@ Arka planda: terminal `background=true` ile çalıştır. Yeniden başlatırken 
 | **Mahalleler** | Genel bakış. Renkli daireler + sidebar liste. Tıkla → zoom + popup (fiyat, min/max, m², mesafe, puan, yaş) |
 | **İlanlar** | Sort (puan/fiyat/mesafe/m²/yaş) + oda filtresi (chip: 1+1/2+1/3+1/4+1) + arama. İlk 60 ilan haritada işaretli. Popup'ta hepsiemlak linki |
 | **Piyasa** | 3 analiz: (1) Trend grafiği — günlük fiyat + m² trendi (Chart.js, zoom destekli). (2) Scatter — fiyat vs mesafe, her nokta mahalle. (3) Karşılaştırma tablosu — tüm mahalleler, sütun başlığına tıkla sırala. En iyi değerler yeşil |
-| **Fırsatlar** | Fiyat düşmüş 44 ilan. ▼% etiketi, düşüş miktarı, eski fiyat. Haritada yeşil daireler. Popup'ta düşüş detayı + link |
+| **Fırsatlar** | Fiyat düşmüş ilanlar. ▼% etiketi, düşüş miktarı, eski fiyat. Haritada yeşil daireler. Popup'ta düşüş detayı + link |
 
 ### Haftalık Rapor Cron Job
 
 ```bash
-cronjob(action='create', name='Haftalık Çankaya Konut Raporu',
+cronjob(action='create', name='Haftalık {SEHIR} Konut Raporu',
         script='haftalik_piyasa_raporu.py', no_agent=True,
         schedule='0 9 * * 1', deliver='telegram:-1003839224584',
         workdir='/home/batu/.hermes')
@@ -434,7 +453,7 @@ Pazartesi 09:00'da kanala otomatik rapor: özet, trend, en ucuz/pahalı mahallel
 - `json.dumps(..., default=str)` — price_history'de datetime string'leri var, `default=str` olmazsa serialization hatası
 - Trend SQL: `price_history` tablosunda `gross_sqm` yok — JOIN lazım (`JOIN listings l ON l.id = ph.listing_id`)
 - Chart.js zoom plugin: `ChartZoom` register etmeyi unutma (`Chart.register(ChartZoom)`)
-- Taşınabilir — başka şehir/lokasyon için: WORK_LAT/WORK_LON değiştir, cankaya_harita.html'deki WORK sabitini güncelle
+- Taşınabilir — başka şehir/lokasyon için: `sehir_server.py` CONFIG'ini düzenle (SEHIR_ADI, WORK_LAT/WORK_LON), template'i kopyalayıp yeniden adlandır
 
 ## 📦 GitHub Yedekleme
 

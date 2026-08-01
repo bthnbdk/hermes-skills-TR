@@ -2,20 +2,19 @@
 
 **Türkiye'den Hermes Agent kullananlar için özel hazırlanmış skill koleksiyonu.**
 
-[Hermes Agent](https://hermes-agent.nousresearch.com/docs), kişisel AI asistanınızdır — Telegram, e-posta ve yerel dosyalarınızla çalışır, sizin yerinize görevleri otomatikleştirir. Bu repodaki skill'ler, Hermes'in **Türkiye'ye özel** veri kaynaklarıyla (HepsiEmlak, Migros, UYAP, Biletinial, Türk havaalanları vb.) çalışmasını sağlar.
+[Hermes Agent](https://hermes-agent.nousresearch.com/docs), kişisel AI asistanınızdır — Telegram, e-posta ve yerel dosyalarınızla çalışır, sizin yerinize görevleri otomatikleştirir. Bu repodaki skill'ler, Hermes'in **Türkiye'ye özel** veri kaynaklarıyla (HepsiEmlak, Migros, UYAP, Biletinial, Türk havalimanları vb.) çalışmasını sağlar.
 
 ## 📦 Neler Var?
 
 | Skill | Kategori | Ne Yapar? |
 |---|---|---|
-| [hepsiemlak-cankaya-watchdog](skills/hepsiemlak-cankaya-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (tüm Türkiye) |
-| [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Ankara'da tek tapulu villa arsası ilanlarını takip et |
+| [hepsiemlak-cankaya-watchdog](skills/hepsiemlak-cankaya-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (81 il, şehir/ilçe seçilebilir) |
+| [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Herhangi bir şehirde tek tapulu villa arsası ilanlarını takip et |
 | [hepsiemlak-yatirim-analiz](skills/hepsiemlak-yatirim-analiz/README.md) | 📈 Emlak | Kiralık yatırım analizi: fiyat, kira getirisi, konum skorlaması |
 | [migros-market-arama](skills/migros-market-arama/README.md) | 🛒 Market | Migros Sanal Market'te ürün ve fiyat araştırması |
 | [biletinial-etkinlik-api](skills/biletinial-etkinlik-api/README.md) | 🎟️ Etkinlik | 84 şehirdeki konser/tiyatro/atölye etkinliklerini çek |
 | [emsal-uyap](skills/emsal-uyap/README.md) | ⚖️ Hukuk | Yargıtay emsal içtihatlarını toplu indir (emsal.uyap.gov.tr) |
-| [ithalat-agent](skills/ithalat-agent/README.md) | 🚢 Ticaret | Türkiye→UK ithalat şirket OS'u (ERPNext + Gmail + ajanlar) |
-| [flight-deals](skills/flight-deals/README.md) | ✈️ Seyahat | Ankara (ESB) çıkışlı ucuz uçuş fırsatlarını ara |
+| [flight-deals](skills/flight-deals/README.md) | ✈️ Seyahat | Tüm Türkiye havalimanlarından ucuz uçuş fırsatlarını ara |
 
 ## 🚀 Kurulum
 
@@ -37,6 +36,19 @@ cp -r hermes-skills-TR/skills/* ~/.hermes/skills/
 4. **Hermes'i yeniden başlatın** (veya yeni oturum açın) — skill'ler otomatik yüklenir.
 
 5. Her skill'in README'sindeki **kurulum ve kullanım** talimatlarını izleyin. Çoğu skill cron görevi (zamanlanmış otomatik çalıştırma) ile birlikte kullanılır.
+
+## 🏙️ Şehir Bazlı Skill'ler
+
+Aşağıdaki skill'ler **tüm Türkiye'de** çalışacak şekilde tasarlanmıştır — şehri siz seçersiniz:
+
+| Skill | Nasıl Yapılandırılır? |
+|---|---|
+| hepsiemlak-cankaya-watchdog | `SEHIR` + `ILCE` slug'larını değiştirin (örn. `istanbul` + `kadikoy`) |
+| hepsiemlak-arsa-watchdog | `{sehir}` slug'ı + `max_price` (örn. `izmir` + 3M TL) |
+| flight-deals | `fly_from=airport:{IATA}` (örn. `airport:IST`, `airport:ADB`) |
+
+81 ilin HepsiEmlak slug listesi: `skills/hepsiemlak-arsa-watchdog/references/turkiye-sehirleri.csv`
+Türkiye havalimanları IATA kodları: `skills/flight-deals/references/turkiye-havalimanlari.md`
 
 ## 🛠️ Gereksinimler
 

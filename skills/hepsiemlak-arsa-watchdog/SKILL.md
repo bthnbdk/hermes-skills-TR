@@ -1,19 +1,36 @@
 ---
 name: hepsiemlak-arsa-watchdog
-description: "Monitor villa plots (villa arsası) with single title deed (tek tapu) on HepsieEmlak for Ankara. Filters by subCategory (Zoned Villa/Residential), max price 2.5M TL. Python stdlib urllib, no external deps."
-version: 2.0.0
+description: "Monitor villa plots (villa arsası) with single title deed (tek tapu) on HepsiEmlak for ANY city in Turkey. Configure with {sehir} slug (ankara, istanbul, izmir...) — filters by subCategory (Zoned Villa/Residential), max price configurable. Python stdlib urllib, no external deps."
+version: 3.0.0
 author: Batu
 ---
 
-# HepsieEmlak Villa Arsası (Tek Tapu) Watchdog
+# HepsiEmlak Villa Arsası (Tek Tapu) Watchdog — Tüm Türkiye
 
-HepsiEmlak API'sinden Ankara satılık **tek tapulu villa arsalarını** otomatik izleyen sistem.
+HepsiEmlak API'sinden herhangi bir şehirde satılık **tek tapulu villa arsalarını** otomatik izleyen sistem.
 Sadece imarlı villa ve imarlı konut arsalarını takip eder — tarla, bahçe, ticari arsalar filtrelenir.
-SQLite veritabanı, AI puanlama ve Telegram bildirimi ile.
+SQLite veritabanı, AI puanlama ve Telegram bildirimi ile. **Şehir seçimi tamamen size bağlı.**
+
+## 🎯 Şehir Yapılandırması
+
+| Değişken | Örnek | Açıklama |
+|----------|-------|----------|
+| `{sehir}` | `ankara`, `istanbul`, `izmir`, `antalya`, `bursa`... | HepsiEmlak URL slug'ı (Türkçe karakterler ASCII'ye çevrilir: `çankırı` → `cankiri`) |
+| `{SEHIR_ADI}` | `Ankara`, `İstanbul`... | Bildirimlerde görünen şehir adı |
+| `max_price` | `2500000` | Maks fiyat (TL) — şehre göre ayarlayın |
+| `counties` | `golbasi` veya boş | İlçe filtresi (boş = tüm ilçeler) |
+| `preferred_counties` | `["etimesgut", "sincan"]` | Puanlama'da tercih edilen ilçeler |
+
+**Tüm 81 il için slug listesi:** `references/turkiye-sehirleri.csv` (HepsiEmlak URL formatında)
+
+Kurulum örneği — İzmir için:
+```
+HepsiEmlak İzmir'de tek tapulu, 3 milyon TL altı villa arsası ilanlarını günde 2 kez kontrol et
+```
 
 ## 🧠 API
 
-**URL:** `https://www.hepsiemlak.com/api/realty-list/ankara-satilik/arsa`
+**URL:** `https://www.hepsiemlak.com/api/realty-list/{sehir}-satilik/arsa`
 
 ### Parametreler
 
@@ -55,15 +72,15 @@ SQLite veritabanı, AI puanlama ve Telegram bildirimi ile.
 
 | Kriter | Ağırlık | Açıklama |
 |--------|:-------:|----------|
-| 💰 **Toplam Fiyat** | 25% | **Bütçe (0-20):** 500K=20, 2.5M=0 · **Piyasa (0-5):** ilçe m² fiyat ortalamasına göre |
+| 💰 **Toplam Fiyat** | 25% | **Bütçe (0-20):** şehre göre alt/üst sınır ayarlanır · **Piyasa (0-5):** ilçe m² fiyat ortalamasına göre |
 | 💵 **m² Fiyatı** | 15% | Düşük m² fiyatı = yüksek puan |
 | 📏 **Arsa Büyüklüğü** | 10% | Orta büyüklük (500-2000m²) ideal |
 | 🏷️ **Arsa Tipi** | 15% | İmarlı Villa=20, İmarlı Konut=8 (villa arsası odaklı) |
-| 📍 **İlçe** | 20% | Tercih edilen ilçeler (Etimesgut, Sincan, Pursaklar vb.) |
+| 📍 **İlçe** | 20% | Tercih edilen ilçeler — **şehre göre yapılandırılır** |
 | 📸 **Fotoğraf** | 10% | 10+ foto = 10p |
 | 🎥 **Video** | 5% | Varsa 5p |
 
-### Arsa Tipi Puanları (Villa Odaklı)
+### Arsa Tipi Puanları (Villa Odaklı — tüm şehirlerde aynı)
 
 ⚠️ Sadece `Zoned - Villa` ve `Zoned - Residential` tipleri gösterilir. Tarla, bahçe, ticari arsalar **otomatik filtrelenir**.
 
@@ -73,7 +90,16 @@ SQLite veritabanı, AI puanlama ve Telegram bildirimi ile.
 | `Zoned - Residential` | İmarlı - Konut | 8 | ✅ Villa yapılabilir |
 | Diğer | Tarla/Bahçe/Ticari | — | ❌ Filtrelenir |
 
-### İlçe Puanları (gelişim potansiyeline göre güncellenmiş)
+### İlçe Puanları — Şehir Bazlı Yapılandırma
+
+İlçe puanları **şehre göre değişir**. Genel kural:
+- Metro/raylı sistem hattı olan ilçeler: yüksek puan (16-20)
+- Hızlı gelişen yeni konut alanları: 14-18
+- Kentsel dönüşüm bölgeleri: 10-14
+- Merkez ama pahalı ilçeler: 12-16
+- Uzak/kırsal ilçeler: 2-8
+
+**Örnek — Ankara (varsayılan):**
 
 | İlçe | Puan | Not |
 |------|:----:|-----|
@@ -94,14 +120,16 @@ SQLite veritabanı, AI puanlama ve Telegram bildirimi ile.
 | Ayaş | 4 | 🟡 Uzak ilçe |
 | Diğer | 2-3 | 🟡 Uzak ilçe |
 
-## 💡 Ankara Arsa Alırken Bilinmesi Gerekenler
+> 💡 Yeni şehir için: `preferred_counties` listesini o şehrin gelişen ilçeleriyle doldurun. Puanlar aynı mantıkla atanır — yerel emlak trendlerini araştırıp güncelleyin.
+
+## 💡 Arsa Alırken Bilinmesi Gerekenler (Türkiye Geneli)
 
 ### 📍 Konum & Gelişim
 
-- **Metro hattı uzantıları**: Kızılay–Çayyolu, Batıkent–Sincan gibi hatların güzergahındaki arsalar ciddi değerleniyor
-- **Gelişmekte olan ilçeler**: Etimesgut, Sincan, Pursaklar, Kahramankazan son yıllarda hızlı büyüyor
-- **Dönüşüm bölgeleri**: Mamak ve Altındağ'da kentsel dönüşüm projeleri var
-- **ABB yatırım planları**: Hangi ilçede altyapı, okul, hastane, sanayi bölgesi yapılacağı arsayı direkt etkiler
+- **Metro/raylı sistem uzantıları**: Hattın güzergahındaki arsalar ciddi değerleniyor — her şehirde hangi ilçelerden geçtiğini kontrol edin
+- **Gelişmekte olan ilçeler**: OSB, üniversite, hastane, organize sanayi yatırımı alan ilçeler hızlı büyüyor
+- **Dönüşüm bölgeleri**: Büyükşehirlerde kentsel dönüşüm projeleri olan bölgeler
+- **Belediye yatırım planları**: Hangi ilçede altyapı, okul, hastane, sanayi bölgesi yapılacağı arsayı direkt etkiler
 
 ### 📋 İmar Durumu (En Kritik Kriter)
 
@@ -131,13 +159,13 @@ SQLite veritabanı, AI puanlama ve Telegram bildirimi ile.
 | [Tapu e-Hizmetler](https://www.tkgm.gov.tr) | Tapu sorgulama, imar durumu |
 | [Parselsorgu.com](https://parselsorgu.com) | Ücretsiz imar + parsel sorgulama |
 | Endeksa / Reidin | Fiyat trend analizi |
-| [Ankara İBB CBS](https://cbs.ankara.bel.tr) | Belediye nazım imar planları |
+| Belediye CBS portalı | Nazım imar planları (her şehrin kendi CBS'si) |
 | Sahibinden / Hepsiemlak | Piyasa fiyat takibi |
-| AFAD | Heyelan/risk haritaları (Keçiören, Çankaya yamaçları)
+| AFAD | Heyelan/risk haritaları |
 
 ## 🗄️ SQLite Veritabanı
 
-**Dosya:** `~/.hermes/hepsiemlak_arsa.db`
+**Dosya:** `~/.hermes/hepsiemlak_arsa_{sehir}.db` (örn: `hepsiemlak_arsa_istanbul.db`)
 
 ### Tablolar
 
@@ -183,7 +211,7 @@ CREATE TABLE scan_log (
 ```python
 cronjob(
     action='create',
-    name='HepsiEmlak Ankara Villa Arsasi (Tek Tapu)',
+    name='HepsiEmlak {SEHIR} Villa Arsasi (Tek Tapu)',
     script='hepsiemlak_arsa_fetch.py',
     no_agent=True,
     schedule='0 */3 * * *',  # her 3 saatte
@@ -195,7 +223,7 @@ cronjob(
 ## 📝 Çıktı Formatı
 
 ```
-🏡 **Yeni Villa Arsası (Tek Tapu) — Ankara**
+🏡 **Yeni Villa Arsası (Tek Tapu) — {SEHIR}**
 📅 27.05.2026 15:00  |  📊 500 ilan içinden 3 villa arsası uygun
 🔑 Sadece tek tapulu, imarlı villa arsaları
 
@@ -211,8 +239,8 @@ Zoned - Villa · 🏡Villa arsası · Tek tapu ✅ · 💰Uygun fiyat · 📊Piy
 Fiyat skoru iki bileşenden oluşur: **Bütçe (0-20)** + **Piyasa kıyası (0-5)**.
 
 ```python
-# Bütçe: 500K=20p, 2.5M=0p
-budget_score = max(0, min(20, 20 - (price - 500_000) / 100_000))
+# Bütçe: alt sınır ve üst sınır şehre göre ayarlanır (örn. Ankara: 500K-2.5M)
+budget_score = max(0, min(20, 20 - (price - MIN_PRICE) / ((MAX_PRICE - MIN_PRICE) / 20)))
 
 # Piyasa: ilçe m² ortalamasına göre
 AVG(CAST(price AS REAL) / NULLIF(gross_sqm, 0)) GROUP BY county
@@ -230,3 +258,11 @@ diff_pct = (price_per_sqm - avg_pps) / avg_pps * 100
 - `sqm.price` = m² fiyatı (TL/m²) — önemli kriter
 - `sqm.grossSqm[0]` = arsa büyüklüğü
 - `identificationNo` = parsel numarası (varsa)
+
+## 📂 Skill Files
+
+| Dosya | Açıklama |
+|-------|----------|
+| `SKILL.md` | Ana talimatlar (bu dosya) |
+| `references/turkiye-sehirleri.csv` | 81 ilin HepsiEmlak URL slug'ları |
+| `references/arsa-puanlama-ornekleri.md` | Farklı şehirler için ilçe puanı örnekleri |

@@ -1,8 +1,8 @@
 # Cron Job Prompt Template for Flight Monitoring
 
-Use this template when Batu asks to monitor a new route. 
-Deliver all results to: telegram:-1003839224584 (@bildirimbb)
-Always set deliver="telegram:-1003839224584"
+Use this template when the user asks to monitor a new route.
+Deliver all results to the user's notification channel (örn. telegram:-1003839224584 @bildirimbb).
+Always set deliver="telegram:-1003839224584" (veya kullanıcının kendi kanalı).
 
 ## Generic Template
 
@@ -35,6 +35,13 @@ Output format (NO URLs anywhere — no bare URLs, no markdown links):
 
 Only top 5. If no results: output nothing at all (silent skip).
 
+## Türkiye Çıkış Havalimanları
+
+Çıkış noktası seçerken: `references/turkiye-havalimanlari.md` dosyasındaki IATA kodlarını kullanın.
+- İstanbul: airport:IST veya airport:SAW veya city:IST (ikisi birden)
+- Ankara: airport:ESB · İzmir: airport:ADB · Antalya: airport:AYT (veya city:AYT)
+- Muğla: airport:DLM veya airport:BJV · Trabzon: airport:TZX
+
 ## Common Configurations
 
 ### ESB → London (Direct, 2+ nights, Jul-Oct)
@@ -47,6 +54,12 @@ Only top 5. If no results: output nothing at all (silent skip).
 - max_stopovers=3
 - nights_in_dst_from=10, nights_in_dst_to=15
 - max_fly_duration=60 (or omit for long-haul)
+- Schedule: weekly
+
+### IST → Anywhere Europe (weekly price scan)
+- fly_from=airport:IST, fly_to=europe preset
+- max_stopovers=1
+- nights_in_dst_from=2, nights_in_dst_to=14
 - Schedule: weekly
 
 ## Key Rules for the Prompt

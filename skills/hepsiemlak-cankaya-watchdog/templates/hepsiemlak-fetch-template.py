@@ -15,14 +15,21 @@ import json, os, ssl, sys, time, urllib.error, urllib.request
 from datetime import datetime
 
 # ===== KONFİGÜRASYON =====
-SEHIR = "ankara"
-ILCE = "cankaya"
-API_URL = f"https://www.hepsiemlak.com/api/realty-list/{SEHIR}-satilik?counties={ILCE}&sortDirection=DESC&sortField=UPDATED_DATE&intent=satilik&mainCategory=konut&availableForLoanStatus=APPLICABLE&p32=8000000&pageNo=1&pageSize=50"
-MAIN_URL = f"https://www.hepsiemlak.com/{ILCE}-satilik"
-DATA_FILE = os.path.expanduser(f"~/.hermes/hepsiemlak_{ILCE}.json")
-HISTORY_FILE = os.path.expanduser(f"~/.hermes/hepsiemlak_{ILCE}_history.jsonl")
+# 🔧 İstediğiniz şehir/ilçe için değiştirin:
+#   SEHIR → HepsiEmlak şehir slug'ı (ankara, istanbul, izmir, antalya, bursa...)
+#           81 il listesi: skills/hepsiemlak-arsa-watchdog/references/turkiye-sehirleri.csv
+#   ILCE  → ilçe slug'ı (cankaya, konak, muratpasa...) — boş bırakılırsa tüm ilçeler
+#   p32   → maks fiyat (TL) — şehrin piyasasına göre ayarlayın
+#   EXCLUDED → hariç tutulacak mahalleler (kendi şehrinize göre düzenleyin)
+SEHIR = "ankara"     # ← şehrinizi yazın
+ILCE = "cankaya"     # ← ilçenizi yazın (veya "")
+MAX_PRICE = 8000000  # ← maks fiyat (TL)
+API_URL = f"https://www.hepsiemlak.com/api/realty-list/{SEHIR}-satilik?counties={ILCE}&sortDirection=DESC&sortField=UPDATED_DATE&intent=satilik&mainCategory=konut&availableForLoanStatus=APPLICABLE&p32={MAX_PRICE}&pageNo=1&pageSize=50"
+MAIN_URL = f"https://www.hepsiemlak.com/{SEHIR}-satilik"
+DATA_FILE = os.path.expanduser(f"~/.hermes/hepsiemlak_{SEHIR}_{ILCE or 'tumu'}.json")
+HISTORY_FILE = os.path.expanduser(f"~/.hermes/hepsiemlak_{SEHIR}_{ILCE or 'tumu'}_history.jsonl")
 
-# Hariç tutulan mahalleler
+# Hariç tutulan mahalleler (örnek — Ankara Çankaya için)
 EXCLUDED = {
     "Ümitköy", "Çayyolu", "Alacaatlı", "Karapınar", "Bayraktar",
     "Yukarı Dikmen", "Mutlukent", "Prof. Dr. Ahmet Taner Kışlalı",
