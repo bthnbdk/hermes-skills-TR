@@ -1,11 +1,11 @@
 ---
-name: emsal-uyap
+name: uyap-emsal-karar
 description: "Emsal UYAP — search, download, and merge Turkey's court precedent database (emsal.uyap.gov.tr). Full pipeline: multi-keyword search → collect unique results → download full texts → merge into single TXT."
 version: 1.3.0
 author: BatuBOT
 ---
 
-# Emsal UYAP Karar Arama — Search & Scrape Pipeline
+# UYAP Emsal Karar Arama — Search & Scrape Pipeline
 
 **Site:** [emsal.uyap.gov.tr](https://emsal.uyap.gov.tr) — Turkey's national precedent court decision database (~840K BAM decisions).
 

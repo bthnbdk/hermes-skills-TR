@@ -16,7 +16,7 @@ hermes-skills/
 │   └── hepsiemlak_schema.sql # DB şeması (referans)
 └── skills/
     └── devops/
-        └── hepsiemlak-ev-watchdog/  # Bu skill
+        └── hepsiemlak-ev-takip/  # Bu skill
 ```
 
 ## Güncelleme İş Akışı
@@ -27,7 +27,7 @@ Skill'de bir değişiklik yapıldığında (script güncellemesi, yeni kriter, v
 cd ~/hermes-skills
 
 # Güncel skill'i kopyala
-cp -r ~/.hermes/skills/devops/hepsiemlak-ev-watchdog/* skills/devops/hepsiemlak-ev-watchdog/
+cp -r ~/.hermes/skills/devops/hepsiemlak-ev-takip/* skills/devops/hepsiemlak-ev-takip/
 cp ~/.hermes/scripts/hepsiemlak_fetch.py scripts/
 
 # Commit & push
@@ -45,4 +45,4 @@ Fine-grained PAT kullanılır (token: `github_pat_...`). Token'ın repo'ya eriş
 
 - DB dosyası (`hepsiemlak.db`) `.gitignore` ile dışarıda bırakılır — sadece şema yedeklenir
 - Script path: `~/.hermes/scripts/hepsiemlak_fetch.py` (cron `no_agent` modu)
-- Skill path: `~/.hermes/skills/devops/hepsiemlak-ev-watchdog/`
+- Skill path: `~/.hermes/skills/devops/hepsiemlak-ev-takip/`

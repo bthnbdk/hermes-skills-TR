@@ -1,11 +1,11 @@
 ---
-name: hepsiemlak-ev-watchdog
+name: hepsiemlak-ev-takip
 description: "Monitor new property listings on HepsieEmlak for ANY city/district in Turkey. Reusable — configure {sehir}/{ilce} slugs, mahalle list, max price, work coordinates, and cron job for any location. Uses Python stdlib urllib, no external deps. SQLite-backed with AI scoring."
 version: 4.0.0
 author: Batu
 ---
 
-# HepsiEmlak Emlak Watchdog (Tüm Türkiye)
+# HepsiEmlak Ev Takip (Tüm Türkiye)
 
 HepsiEmlak API'sinden **herhangi bir il/ilçede** satılık konut ilanlarını kontrol eden `no_agent` cron job sistemi. Python stdlib ile çalışır — requests/curl_cffi/Playwright gerektirmez. Şehir seçimi tamamen size bağlı: `SEHIR` ve `ILCE` değişkenlerini değiştirip 5 dakikada yeni bir lokasyonda çalıştırabilirsiniz.
 
@@ -20,7 +20,7 @@ HepsiEmlak API'sinden **herhangi bir il/ilçede** satılık konut ilanlarını k
 | `EXCLUDED` | `{"Ümitköy", ...}` | Hariç tutulacak mahalleler (set) |
 | `DB` | `~/.hermes/hepsiemlak.db` | SQLite dosyası — şehir başına ayrı dosya önerilir |
 
-**Tüm 81 il için slug listesi:** arsa-watchdog skill'indeki `references/turkiye-sehirleri.csv` dosyasını da kullanabilirsiniz (aynı slug formatı).
+**Tüm 81 il için slug listesi:** hepsiemlak-arsa-takip skill'indeki `references/turkiye-sehirleri.csv` dosyasını da kullanabilirsiniz (aynı slug formatı).
 
 Kurulum örneği — İzmir Konak için:
 ```
@@ -462,7 +462,7 @@ Bu skill GitHub'da yedeklenir: https://github.com/bthnbdk/hermes-skills
 Güncelleme yapınca:
 ```bash
 cd ~/hermes-skills
-cp -r ~/.hermes/skills/devops/hepsiemlak-ev-watchdog/* skills/devops/hepsiemlak-ev-watchdog/
+cp -r ~/.hermes/skills/devops/hepsiemlak-ev-takip/* skills/devops/hepsiemlak-ev-takip/
 cp ~/.hermes/scripts/hepsiemlak_fetch.py scripts/
 git add -A && git commit -m "update" && git push
 ```

@@ -1,4 +1,4 @@
-# ✈️ Flight Deals (Tüm Türkiye)
+# ✈️ Ucuz Uçak Bileti (Tüm Türkiye)
 
 **Türkiye'deki herhangi bir havalimanından çıkışlı ucuz uçuş fırsatlarını otomatik arayan skill — FlightList.io (Kiwi.com proxy) API'si ile.**
 
@@ -38,7 +38,7 @@ GET https://www.flightlist.io/api/search.php?fly_from=airport:ESB&fly_to=city:LO
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/flight-deals ~/.hermes/skills/
+cp -r skills/ucuz-ucak-bileti ~/.hermes/skills/
 ```
 
 Hermes'e örnek istek:

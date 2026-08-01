@@ -1,11 +1,11 @@
 ---
-name: flight-deals
+name: ucuz-ucak-bileti
 description: "Search cheap flight deals via FlightList.io (Kiwi.com proxy API). Query ANY Turkish airport (IST, SAW, ESB, ADB, AYT, DLM...) with full URL params and JSON response structure documented. City/airport codes for all 81 provinces in references/turkiye-havalimanlari.md."
 version: 3.0.0
 author: BatuBOT
 ---
 
-# Flight Deals (FlightList.io / Kiwi API) — Tüm Türkiye
+# Ucuz Uçak Bileti (FlightList.io / Kiwi API) — Tüm Türkiye
 
 Search flight deals using the FlightList.io API — a proxy over Kiwi.com's Tequila API. Returns clean JSON with pricing, routes, airlines, and durations. **Türkiye'deki herhangi bir havalimanından çıkış desteklenir** — `fly_from`'a kendi şehrinizin IATA kodunu verin (tam liste: `references/turkiye-havalimanlari.md`).
 
@@ -258,8 +258,8 @@ Bu skill GitHub'da yedeklenir:
 Güncelleme için:
 ```bash
 cd ~/hermes-skills
-cp -r ~/.hermes/skills/travel/flight-deals/* skills/travel/flight-deals/
-git add -A && git commit -m "update flight-deals" && git push
+cp -r ~/.hermes/skills/travel/ucuz-ucak-bileti/* skills/travel/ucuz-ucak-bileti/
+git add -A && git commit -m "update ucuz-ucak-bileti" && git push
 ```
 
 ## Preset Country Lists

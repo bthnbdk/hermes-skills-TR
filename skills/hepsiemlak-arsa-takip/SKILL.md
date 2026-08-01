@@ -1,11 +1,11 @@
 ---
-name: hepsiemlak-arsa-watchdog
+name: hepsiemlak-arsa-takip
 description: "Monitor land/plot (arsa) listings on HepsiEmlak for ANY city in Turkey. Fully configurable: {sehir} slug, arsa tipleri (villa/konut/tarla/bahçe/ticari/imarsız), tek tapu filtresi açık/kapalı, max price, min/max m², counties. Python stdlib urllib, no external deps."
 version: 4.0.0
 author: Batu
 ---
 
-# HepsiEmlak Arsa Watchdog — Tüm Türkiye (Tam Yapılandırılabilir)
+# 🏗️ HepsiEmlak Arsa Takip — Tüm Türkiye (Tam Yapılandırılabilir)
 
 HepsiEmlak API'sinden herhangi bir şehirde satılık **arsa ilanlarını** otomatik izleyen sistem.
 **Ne izleyeceğiniz tamamen size bağlı**: sadece tek tapulu villa arsası, sadece tarla, imarlı konut + bahçe kombinasyonu, hepsi birden — hepsi mümkün.

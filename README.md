@@ -8,13 +8,13 @@
 
 | Skill | Kategori | Ne Yapar? |
 |---|---|---|
-| [hepsiemlak-ev-watchdog](skills/hepsiemlak-ev-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (81 il, şehir/ilçe seçilebilir) |
-| [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Herhangi bir şehirde arsa ilanlarını takip et (tip/tapu/fiyat filtreleri yapılandırılabilir) |
-| [hepsiemlak-yatirim-analiz](skills/hepsiemlak-yatirim-analiz/README.md) | 📈 Emlak | Kiralık yatırım analizi: fiyat, kira getirisi, konum skorlaması |
-| [migros-market-arama](skills/migros-market-arama/README.md) | 🛒 Market | Migros Sanal Market'te ürün ve fiyat araştırması |
-| [biletinial-etkinlik-api](skills/biletinial-etkinlik-api/README.md) | 🎟️ Etkinlik | 84 şehirdeki konser/tiyatro/atölye etkinliklerini çek |
-| [emsal-uyap](skills/emsal-uyap/README.md) | ⚖️ Hukuk | Yargıtay emsal içtihatlarını toplu indir (emsal.uyap.gov.tr) |
-| [flight-deals](skills/flight-deals/README.md) | ✈️ Seyahat | Tüm Türkiye havalimanlarından ucuz uçuş fırsatlarını ara |
+| [hepsiemlak-ev-takip](skills/hepsiemlak-ev-takip/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (81 il, şehir/ilçe seçilebilir) |
+| [hepsiemlak-arsa-takip](skills/hepsiemlak-arsa-takip/README.md) | 🏗️ Emlak | Herhangi bir şehirde arsa ilanlarını takip et (tip/tapu/fiyat filtreleri yapılandırılabilir) |
+| [hepsiemlak-yatirim-analizi](skills/hepsiemlak-yatirim-analizi/README.md) | 📈 Emlak | Kiralık yatırım analizi: fiyat, kira getirisi, konum skorlaması |
+| [migros-fiyat-arama](skills/migros-fiyat-arama/README.md) | 🛒 Market | Migros Sanal Market'te ürün ve fiyat araştırması |
+| [biletinial-etkinlik](skills/biletinial-etkinlik/README.md) | 🎟️ Etkinlik | 84 şehirdeki konser/tiyatro/atölye etkinliklerini çek |
+| [uyap-emsal-karar](skills/uyap-emsal-karar/README.md) | ⚖️ Hukuk | Yargıtay emsal içtihatlarını toplu indir (emsal.uyap.gov.tr) |
+| [ucuz-ucak-bileti](skills/ucuz-ucak-bileti/README.md) | ✈️ Seyahat | Tüm Türkiye havalimanlarından ucuz uçuş fırsatlarını ara |
 
 ## 🚀 Kurulum
 
@@ -28,7 +28,7 @@ git clone https://github.com/bthnbdk/hermes-skills-TR.git
 3. **İstediğiniz skill'i Hermes'in skill klasörüne kopyalayın:**
 
 ```bash
-cp -r hermes-skills-TR/skills/hepsiemlak-ev-watchdog ~/.hermes/skills/
+cp -r hermes-skills-TR/skills/hepsiemlak-ev-takip ~/.hermes/skills/
 # veya tümünü:
 cp -r hermes-skills-TR/skills/* ~/.hermes/skills/
 ```
@@ -43,12 +43,12 @@ Aşağıdaki skill'ler **tüm Türkiye'de** çalışacak şekilde tasarlanmışt
 
 | Skill | Nasıl Yapılandırılır? |
 |---|---|
-| hepsiemlak-ev-watchdog | `SEHIR` + `ILCE` slug'larını değiştirin (örn. `istanbul` + `kadikoy`) |
-| hepsiemlak-arsa-watchdog | `{sehir}` slug'ı + `arsa_tipleri` + `tek_tapu` (örn. `izmir` + villa/konut + hisseli dahil) |
-| flight-deals | `fly_from=airport:{IATA}` (örn. `airport:IST`, `airport:ADB`) |
+| hepsiemlak-ev-takip | `SEHIR` + `ILCE` slug'larını değiştirin (örn. `istanbul` + `kadikoy`) |
+| hepsiemlak-arsa-takip | `{sehir}` slug'ı + `arsa_tipleri` + `tek_tapu` (örn. `izmir` + villa/konut + hisseli dahil) |
+| ucuz-ucak-bileti | `fly_from=airport:{IATA}` (örn. `airport:IST`, `airport:ADB`) |
 
-81 ilin HepsiEmlak slug listesi: `skills/hepsiemlak-arsa-watchdog/references/turkiye-sehirleri.csv`
-Türkiye havalimanları IATA kodları: `skills/flight-deals/references/turkiye-havalimanlari.md`
+81 ilin HepsiEmlak slug listesi: `skills/hepsiemlak-arsa-takip/references/turkiye-sehirleri.csv`
+Türkiye havalimanları IATA kodları: `skills/ucuz-ucak-bileti/references/turkiye-havalimanlari.md`
 
 ## 🛠️ Gereksinimler
 

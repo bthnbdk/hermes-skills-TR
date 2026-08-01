@@ -1,4 +1,4 @@
-# 🎟️ Biletinial Etkinlik API
+# 🎟️ Biletinial Etkinlik
 
 **Biletinial (biletinial.com) üzerinden Türkiye geneli etkinlikleri çekin — konser, tiyatro, atölye, festival. 84 şehir için çalışır.**
 
@@ -27,7 +27,7 @@ GET https://biletinial.com/GetAllEventsByCity?cityId={id}&langId=1&countryId=3&l
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/biletinial-etkinlik-api ~/.hermes/skills/
+cp -r skills/biletinial-etkinlik ~/.hermes/skills/
 ```
 
 Hermes'e örnek istekler:

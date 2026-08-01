@@ -17,7 +17,7 @@ from datetime import datetime
 # ===== KONFİGÜRASYON =====
 # 🔧 İstediğiniz şehir/ilçe için değiştirin:
 #   SEHIR → HepsiEmlak şehir slug'ı (ankara, istanbul, izmir, antalya, bursa...)
-#           81 il listesi: skills/hepsiemlak-arsa-watchdog/references/turkiye-sehirleri.csv
+#           81 il listesi: skills/hepsiemlak-arsa-takip/references/turkiye-sehirleri.csv
 #   ILCE  → ilçe slug'ı (cankaya, konak, muratpasa...) — boş bırakılırsa tüm ilçeler
 #   p32   → maks fiyat (TL) — şehrin piyasasına göre ayarlayın
 #   EXCLUDED → hariç tutulacak mahalleler (kendi şehrinize göre düzenleyin)

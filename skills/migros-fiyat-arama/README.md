@@ -1,4 +1,4 @@
-# 🛒 Migros Market Arama
+# 🛒 Migros Fiyat Arama
 
 **Migros Sanal Market'te ürün ve fiyat araştırması — en iyi fiyatı bul, indirimleri takip et, yemek planı yap.**
 
@@ -21,7 +21,7 @@ Migros Sanal Market'in **resmi REST API'si** üzerinden çalışır (site kazım
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/migros-market-arama ~/.hermes/skills/
+cp -r skills/migros-fiyat-arama ~/.hermes/skills/
 ```
 
 Hermes'e örnek istekler:

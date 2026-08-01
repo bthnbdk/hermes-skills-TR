@@ -9,7 +9,7 @@ Always set deliver="telegram:-1003839224584" (veya kullanıcının kendi kanalı
 Name: "{cityFrom}-{cityTo} Flight Monitor"
 Schedule: "7d" (weekly) or "3d" (every 3 days)
 Repeat: forever
-Skills: ["flight-deals"]
+Skills: ["ucuz-ucak-bileti"]
 Deliver: "telegram:-1003839224584"
 
 ## Prompt Template

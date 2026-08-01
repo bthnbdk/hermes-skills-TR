@@ -1,4 +1,4 @@
-# 🏠 HepsiEmlak Emlak Watchdog (Tüm Türkiye)
+# 🏠 HepsiEmlak Ev Takip (Tüm Türkiye)
 
 **Türkiye'nin herhangi bir şehri/ilçesinde HepsiEmlak'ta yeni çıkan emlak ilanlarını otomatik takip eden bekçi (watchdog) skill'i.**
 
@@ -33,7 +33,7 @@ Skill ilk olarak Ankara Çankaya için geliştirildi, ancak **tamamen yeniden ya
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/hepsiemlak-ev-watchdog ~/.hermes/skills/
+cp -r skills/hepsiemlak-ev-takip ~/.hermes/skills/
 ```
 
 Ardından Hermes'e şöyle bir istek verin:

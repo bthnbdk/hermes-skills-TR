@@ -1,4 +1,4 @@
-# 🏗️ HepsiEmlak Arsa Watchdog
+# 🏗️ HepsiEmlak Arsa Takip
 
 **Türkiye'nin herhangi bir şehrinde arsa ilanlarını otomatik takip eden bekçi skill'i — takip edeceğiniz arsa tiplerini siz seçersiniz.**
 
@@ -43,7 +43,7 @@ Arsa yatırımı yapanlar için kritik bilgi: iyi arsalar **çok hızlı tükeni
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/hepsiemlak-arsa-watchdog ~/.hermes/skills/
+cp -r skills/hepsiemlak-arsa-takip ~/.hermes/skills/
 ```
 
 Hermes'e örnek istek:

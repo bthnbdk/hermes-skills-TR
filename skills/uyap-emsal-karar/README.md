@@ -23,7 +23,7 @@ Emsal UYAP'ın web arayüzünün altındaki arama API'si tersine mühendislikle 
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/emsal-uyap ~/.hermes/skills/
+cp -r skills/uyap-emsal-karar ~/.hermes/skills/
 ```
 
 Hermes'e örnek istek:

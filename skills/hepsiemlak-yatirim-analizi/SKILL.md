@@ -1,5 +1,5 @@
 ---
-name: hepsiemlak-yatirim-analiz
+name: hepsiemlak-yatirim-analizi
 description: "Analyze HepsiEmlak listings for rental investment potential across ANY city in Turkey. Scoring: price, rental yield estimate, hospital/school proximity, floor, room type. Uses SQLite + AI analysis for on-demand queries."
 version: 1.0.0
 author: Batu
@@ -265,5 +265,5 @@ Kullanıcı "yatırımlık daire bul" dediğinde:
 
 ## 🔗 İlgili Skill'ler
 
-- `hepsiemlak-ev-watchdog` — konut takibi (bireysel kullanım)
+- `hepsiemlak-ev-takip` — konut takibi (bireysel kullanım)
 - `maps` — OpenStreetMap POI sorgulama (hastane/okul için)

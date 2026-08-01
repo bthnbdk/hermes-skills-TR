@@ -1,4 +1,4 @@
-# 📈 HepsiEmlak Yatırım Analiz
+# 📈 HepsiEmlak Yatırım Analizi
 
 **Türkiye'nin herhangi bir şehrinde kiralık yatırım potansiyelini analiz eden skill — "Bu evi alıp kiraya versem kârlı mı?" sorusunun cevabı.**
 
@@ -22,7 +22,7 @@ Bir ev satın alıp kiraya vermeyi düşünüyorsunuz. Bu skill, HepsiEmlak'taki
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/hepsiemlak-yatirim-analiz ~/.hermes/skills/
+cp -r skills/hepsiemlak-yatirim-analizi ~/.hermes/skills/
 ```
 
 Hermes'e örnek istek:
