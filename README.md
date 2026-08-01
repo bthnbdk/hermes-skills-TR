@@ -1,8 +1,8 @@
-# 🇹🇷 Hermes Skills TR
+# 🇹🇷 Türkçe AI Skillleri
 
-**Türkiye'den Hermes Agent kullananlar için özel hazırlanmış skill koleksiyonu.**
+**Türkiye'ye özel, her AI agent ile çalışan hazır skill koleksiyonu.**
 
-[Hermes Agent](https://hermes-agent.nousresearch.com/docs), kişisel AI asistanınızdır — Telegram, e-posta ve yerel dosyalarınızla çalışır, sizin yerinize görevleri otomatikleştirir. Bu repodaki skill'ler, Hermes'in **Türkiye'ye özel** veri kaynaklarıyla (HepsiEmlak, Migros, UYAP, Biletinial, Türk havalimanları vb.) çalışmasını sağlar.
+Bu repodaki skill'ler; emlak takibi, market fiyatları, hukuk içtihatları, etkinlikler ve ucuz uçuş gibi **Türkiye'ye özel veri kaynaklarıyla** çalışır. **Agent bağımsızdır** — Hermes Agent, Claude Code, Codex, Cursor veya düz Python ile kullanılabilir.
 
 ## 📦 Neler Var?
 
@@ -23,15 +23,15 @@
 1. **Skill'leri indirin:**
 
 ```bash
-git clone https://github.com/bthnbdk/hermes-skills-TR.git
+git clone https://github.com/bthnbdk/turkce-ai-skillleri.git
 ```
 
 2. **İstediğiniz skill'i Hermes'in skill klasörüne kopyalayın:**
 
 ```bash
-cp -r hermes-skills-TR/skills/hepsiemlak-ev-takip ~/.hermes/skills/
+cp -r turkce-ai-skillleri/skills/hepsiemlak-ev-takip ~/.hermes/skills/
 # veya tümünü:
-cp -r hermes-skills-TR/skills/* ~/.hermes/skills/
+cp -r turkce-ai-skillleri/skills/* ~/.hermes/skills/
 ```
 
 3. **Hermes'i yeniden başlatın** (veya yeni oturum açın) — skill'ler otomatik yüklenir.
@@ -70,6 +70,14 @@ Türkiye havalimanları IATA kodları: `skills/ucuz-ucak-bileti/references/turki
 - Python 3.10+ (çoğu skill sadece standart kütüphane kullanır, ek kurulum gerekmez)
 - Hermes Agent (Telegram entegrasyonu önerilir — bildirimler için)
 - Bazı skill'ler ücretsiz/üyelikli servislere erişim gerektirir (örn. HepsiEmlak, Migros)
+
+## ⚠️ Sorumluluk Reddi (Disclaimer)
+
+- Bu repodaki skill'ler **bilgilendirme ve otomasyon amaçlıdır**; yatırım, hukuki veya mali tavsiye niteliği taşımaz.
+- Skill'ler, ilgili servislerin (HepsiEmlak, Migros, UYAP, Biletinial, FlightList.io vb.) resmi API'leri ve kamuya açık uç noktaları üzerinden çalışır. Bu servislerin **kullanım koşullarını ihlal etmeyecek** şekilde, makul sıklıkta ve hacimde kullanılması sizin sorumluluğunuzdadır.
+- İlgili servisler API'lerini değiştirebilir, erişimi kısıtlayabilir veya kapatabilir; bu durumda skill'lerin çalışmayı durdurması olağandır.
+- Skill'lerin kullanımından doğabilecek **doğrudan veya dolaylı hiçbir zarardan, veri kaybından, mali kayıptan veya hukuki sonuçtan repo sahibi sorumlu değildir.** Skill'leri kendi sorumluluğunuzda kullanırsınız.
+- Otomatik görevler (cron) yapılandırırken bildirim kanallarını, fiyat eşiklerini ve çalışma sıklığını kendi ihtiyacınıza göre doğrulayın.
 
 ## 📄 Lisans
 

@@ -252,7 +252,7 @@ When `flight_type=return` returns 0 results but individual one-way searches work
 ## 📦 GitHub Yedekleme
 
 Bu skill GitHub'da yedeklenir:
-- TR koleksiyonu: https://github.com/bthnbdk/hermes-skills-TR
+- TR koleksiyonu: https://github.com/bthnbdk/turkce-ai-skillleri
 - Ana koleksiyon: https://github.com/bthnbdk/hermes-skills
 
 Güncelleme için:

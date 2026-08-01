@@ -2,12 +2,12 @@
 
 Bu skill ve ilişkili script'ler GitHub'da yedeklenmektedir:
 
-**Repo:** https://github.com/bthnbdk/hermes-skills-TR (Türkiye koleksiyonu)
+**Repo:** https://github.com/bthnbdk/turkce-ai-skillleri (Türkiye koleksiyonu)
 
 ## Repo Yapısı
 
 ```
-hermes-skills-TR/
+turkce-ai-skillleri/
 ├── README.md
 └── skills/
     └── hepsiemlak-ev-takip/  # Bu skill
@@ -32,7 +32,7 @@ git push
 ## Kimlik Doğrulama
 
 Fine-grained PAT kullanılır (token: `github_pat_...`). Token'ın repo'ya erişimi olduğundan emin ol:
-- https://github.com/settings/tokens → token → Repository access → `hermes-skills-TR`
+- https://github.com/settings/tokens → token → Repository access → `turkce-ai-skillleri`
 
 ## Notlar
 

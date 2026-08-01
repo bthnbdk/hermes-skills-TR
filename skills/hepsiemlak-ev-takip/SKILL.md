@@ -485,7 +485,7 @@ Pazartesi 09:00'da kanala otomatik rapor: özet, trend, en ucuz/pahalı mahallel
 ## 📦 GitHub Yedekleme
 
 Bu skill GitHub'da yedeklenir:
-- TR koleksiyonu: https://github.com/bthnbdk/hermes-skills-TR
+- TR koleksiyonu: https://github.com/bthnbdk/turkce-ai-skillleri
 - Ana koleksiyon: https://github.com/bthnbdk/hermes-skills
 
 Güncelleme yapınca (kendi fork'unuzda):
