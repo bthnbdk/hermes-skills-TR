@@ -15,6 +15,7 @@ Bu repodaki skill'ler; emlak takibi, market fiyatları, hukuk içtihatları, etk
 | [biletinial-etkinlik](skills/biletinial-etkinlik/README.md) | 🎟️ Etkinlik | 84 şehirdeki konser/tiyatro/atölye etkinliklerini çek |
 | [uyap-emsal-karar](skills/uyap-emsal-karar/README.md) | ⚖️ Hukuk | Yargıtay emsal içtihatlarını toplu indir (emsal.uyap.gov.tr) |
 | [ucuz-ucak-bileti](skills/ucuz-ucak-bileti/README.md) | ✈️ Seyahat | Tüm Türkiye havalimanlarından ucuz uçuş fırsatlarını ara |
+| [bing-rss-arama](skills/bing-rss-arama/README.md) | 🔍 Arama | Ücretsiz Bing web araması (API anahtarı yok) — haber/keyword/rakip takibi |
 
 ## 🚀 Kurulum
 
