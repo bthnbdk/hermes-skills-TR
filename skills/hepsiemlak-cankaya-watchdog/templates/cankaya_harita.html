@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Çankaya Konut Haritası 🏠</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f1218;--surface:#181c28;--surface2:#1e2538;--border:#2a3150;--text:#e0e4f0;--text2:#8892b0;--accent:#4fc3f7;--green:#4caf50;--red:#ef5350;--orange:#ff9800}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+#app{display:flex;height:100vh}
+#sidebar{width:420px;min-width:420px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10}
+#sidebar-header{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface2)}
+#sidebar-header h1{font-size:16px;font-weight:700;color:var(--accent)}
+#sidebar-header h1 span{color:var(--text);font-weight:400}
+#sidebar-header .sub{font-size:12px;color:var(--text2);margin-top:4px}
+#stats-bar{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.stat-card{flex:1;min-width:60px;text-align:center;padding:6px 8px;background:var(--surface2);border-radius:8px}
+.stat-card .val{font-size:14px;font-weight:700;color:var(--accent)}
+.stat-card .lbl{font-size:10px;color:var(--text2);margin-top:1px}
+#search-box{margin:8px 16px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;outline:none;width:calc(100% - 32px)}
+#search-box:focus{border-color:var(--accent)}
+#neighborhood-list{flex:1;overflow-y:auto;padding:4px 8px}
+#neighborhood-list::-webkit-scrollbar{width:4px}
+#neighborhood-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.nh-item{padding:10px 12px;margin:2px 0;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.nh-item:hover{background:var(--surface2);border-color:var(--border)}
+.nh-item.active{background:color-mix(in srgb,var(--accent) 15%,var(--surface2));border-color:var(--accent)}
+.nh-item .row1{display:flex;justify-content:space-between;align-items:center}
+.nh-item .name{font-size:13px;font-weight:600}
+.nh-item .price{font-size:13px;font-weight:700;color:var(--accent)}
+.nh-item .row2{display:flex;gap:12px;margin-top:4px;font-size:11px;color:var(--text2)}
+.nh-item .row2 span{display:flex;align-items:center;gap:3px}
+.nh-item .bar-wrap{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.nh-item .bar{height:100%;border-radius:2px;transition:width .5s}
+#map-container{flex:1;position:relative}
+#map{width:100%;height:100%}
+.leaflet-popup-content-wrapper{background:var(--surface)!important;color:var(--text)!important;border-radius:12px!important;box-shadow:0 8px 32px rgba(0,0,0,.5)!important}
+.leaflet-popup-content{font-size:13px;line-height:1.6;margin:12px 16px!important}
+.leaflet-popup-tip{background:var(--surface)!important}
+.popup-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.popup-row{display:flex;justify-content:space-between;gap:20px;padding:2px 0;font-size:12px}
+.popup-row .l{color:var(--text2)}
+.popup-row .v{font-weight:600}
+.neighborhood-label{font-size:10px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap;text-align:center;color:#fff}
+.legend{position:absolute;bottom:24px;right:16px;z-index:1000;background:var(--surface);padding:12px 16px;border-radius:12px;border:1px solid var(--border);font-size:11px;min-width:160px}
+.legend-title{font-weight:600;margin-bottom:6px;color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.legend-item{display:flex;align-items:center;gap:8px;padding:2px 0}
+.legend-color{width:14px;height:14px;border-radius:4px;flex-shrink:0}
+.legend-label{color:var(--text2)}
+#loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999;transition:opacity .3s}
+#loading.hidden{opacity:0;pointer-events:none}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.custom-tooltip{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spinner"></div></div>
+<div id="app">
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h1>Çankaya <span>Konut Haritası</span></h1>
+      <div class="sub">📍 İş Yeri: Çankaya · SQLite + Leaflet.js</div>
+    </div>
+    <div id="stats-bar">
+      <div class="stat-card"><div class="val" id="s-avg">—</div><div class="lbl">Ort. Fiyat</div></div>
+      <div class="stat-card"><div class="val" id="s-min">—</div><div class="lbl">Min Fiyat</div></div>
+      <div class="stat-card"><div class="val" id="s-max">—</div><div class="lbl">Max Fiyat</div></div>
+      <div class="stat-card"><div class="val" id="s-sqm">—</div><div class="lbl">Ort. m²</div></div>
+      <div class="stat-card"><div class="val" id="s-score">—</div><div class="lbl">Ort. Skor</div></div>
+    </div>
+    <input id="search-box" type="text" placeholder="🔍 Mahalle ara..." oninput="filterNeighborhoods()">
+    <div id="neighborhood-list"></div>
+  </div>
+  <div id="map-container">
+    <div id="map"></div>
+    <div class="legend">
+      <div class="legend-title">Ortalama Fiyat / m²</div>
+      <div class="legend-item"><div class="legend-color" style="background:#4caf50"></div><span class="legend-label">&lt; 40K TL</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#8bc34a"></div><span class="legend-label">40-50K TL</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#ff9800"></div><span class="legend-label">50-60K TL</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#f44336"></div><span class="legend-label">60-70K TL</span></div>
+      <div class="legend-item"><div class="legend-color" style="background:#b71c1c"></div><span class="legend-label">70K+ TL</span></div>
+    </div>
+  </div>
+</div>
+<script>
+const WORK = {lat: 39.8897782, lng: 32.8594033};
+const map = L.map('map', {center: [WORK.lat, WORK.lng], zoom: 13, zoomControl: true, attributionControl: false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19}).addTo(map);
+
+const workIcon = L.divIcon({
+  html: '<div style="background:#4fc3f7;width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5)"></div>',
+  iconSize: [16, 16], iconAnchor: [8, 8], className: ''
+});
+L.marker([WORK.lat, WORK.lng], {icon: workIcon, zIndexOffset: 1000})
+  .addTo(map)
+  .bindTooltip('\ud83d\udccd \u0130\u015f Yerin', {permanent: true, direction: 'top', className: 'custom-tooltip', offset: [0, -10]});
+
+let neighborhoods = [];
+let activeNeighborhood = null;
+const circleGroup = L.layerGroup().addTo(map);
+
+function priceColor(ppm) {
+  if (!ppm || ppm < 40000) return '#4caf50';
+  if (ppm < 50000) return '#8bc34a';
+  if (ppm < 60000) return '#ff9800';
+  if (ppm < 70000) return '#f44336';
+  return '#b71c1c';
+}
+function radiusFromCount(c) { return Math.max(10, Math.min(40, c * 0.5)); }
+function fmtPrice(p) { return p ? Number(p).toLocaleString('tr-TR') + ' TL' : '\u2014'; }
+function fmtShortPrice(p) { return p ? (p / 1000000).toFixed(1) + 'M' : '\u2014'; }
+
+async function loadData() {
+  const [nhRes, statsRes] = await Promise.all([
+    fetch('/api/neighborhoods'), fetch('/api/stats')
+  ]);
+  neighborhoods = await nhRes.json();
+  const stats = await statsRes.json();
+  document.getElementById('s-avg').textContent = fmtShortPrice(stats.avg_price);
+  document.getElementById('s-min').textContent = fmtShortPrice(stats.min_price);
+  document.getElementById('s-max').textContent = fmtShortPrice(stats.max_price);
+  document.getElementById('s-sqm').textContent = stats.avg_sqm + 'm\u00b2';
+  document.getElementById('s-score').textContent = stats.avg_score;
+  renderNeighborhoods();
+  renderMapCircles();
+  document.getElementById('loading').classList.add('hidden');
+
+  const bounds = neighborhoods.filter(n => n.lat && n.lon).map(n => [n.lat, n.lon]);
+  if (bounds.length > 0) { bounds.push([WORK.lat, WORK.lng]); map.fitBounds(bounds, {padding: [40, 40]}); }
+}
+
+function renderNeighborhoods(filter) {
+  if (!filter) filter = '';
+  const container = document.getElementById('neighborhood-list');
+  const filtered = filter ? neighborhoods.filter(function(n) { return n.neighborhood.toLowerCase().indexOf(filter.toLowerCase()) !== -1; }) : neighborhoods;
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var n = filtered[i];
+    var isActive = activeNeighborhood === n.neighborhood;
+    var pct = n.avg_score ? Math.min(n.avg_score / 70 * 100, 100) : 0;
+    var color = priceColor(n.avg_ppm);
+    html += '<div class="nh-item' + (isActive ? ' active' : '') + '" onclick="selectNeighborhood(\'' + n.neighborhood.replace(/'/g, "\\'") + '\')">' +
+      '<div class="row1"><span class="name">' + n.neighborhood + '</span><span class="price">' + fmtShortPrice(n.avg_price) + '</span></div>' +
+      '<div class="row2"><span>\ud83d\udcd0 ' + n.avg_sqm + 'm\u00b2</span><span>\ud83d\udccb ' + n.count + ' ilan</span>' +
+      '<span>\u2b50 ' + n.avg_score + '</span><span>\ud83d\udccd ' + n.distance_km + 'km</span><span>\ud83c\udff7\ufe0f ' + fmtShortPrice(n.avg_ppm) + '/m\u00b2</span></div>' +
+      '<div class="bar-wrap"><div class="bar" style="width:' + pct + '%;background:' + color + '"></div></div></div>';
+  }
+  container.innerHTML = html;
+}
+
+function filterNeighborhoods() { renderNeighborhoods(document.getElementById('search-box').value); }
+
+function selectNeighborhood(name) {
+  activeNeighborhood = name;
+  var n = null;
+  for (var i = 0; i < neighborhoods.length; i++) {
+    if (neighborhoods[i].neighborhood === name) { n = neighborhoods[i]; break; }
+  }
+  if (!n) return;
+  renderNeighborhoods(document.getElementById('search-box').value);
+  if (n.lat && n.lon) {
+    map.setView([n.lat, n.lon], 15, {animate: true});
+    var content = '<div class="popup-title">' + n.neighborhood + '</div>' +
+      '<div class="popup-row"><span class="l">Ortalama Fiyat</span><span class="v">' + fmtPrice(n.avg_price) + '</span></div>' +
+      '<div class="popup-row"><span class="l">Min - Max</span><span class="v">' + fmtShortPrice(n.min_price) + ' - ' + fmtShortPrice(n.max_price) + '</span></div>' +
+      '<div class="popup-row"><span class="l">Birim Fiyat</span><span class="v">' + fmtShortPrice(n.avg_ppm) + '/m\u00b2</span></div>' +
+      '<div class="popup-row"><span class="l">Ortalama m\u00b2</span><span class="v">' + n.avg_sqm + 'm\u00b2</span></div>' +
+      '<div class="popup-row"><span class="l">\u0130lan Say\u0131s\u0131</span><span class="v">' + n.count + '</span></div>' +
+      '<div class="popup-row"><span class="l">Puan</span><span class="v">\u2b50 ' + n.avg_score + '</span></div>' +
+      '<div class="popup-row"><span class="l">\u0130\u015f Yerine Uzakl\u0131k</span><span class="v">\ud83d\udccd ' + n.distance_km + 'km</span></div>';
+    L.popup({maxWidth: 280, className: ''})
+      .setLatLng([n.lat, n.lon])
+      .setContent(content)
+      .openOn(map);
+  }
+}
+
+function renderMapCircles() {
+  circleGroup.clearLayers();
+  for (var i = 0; i < neighborhoods.length; i++) {
+    var n = neighborhoods[i];
+    if (!n.lat || !n.lon) continue;
+    var color = priceColor(n.avg_ppm);
+    var r = radiusFromCount(n.count);
+    (function(nh) {
+      var circle = L.circleMarker([nh.lat, nh.lon], {radius: r, color: color, fillColor: color, fillOpacity: 0.4, weight: 2, opacity: 0.7}).addTo(circleGroup);
+      L.marker([nh.lat, nh.lon], {
+        icon: L.divIcon({html: '<div class="neighborhood-label">' + nh.neighborhood + '</div>', iconSize: [80, 14], iconAnchor: [40, 0], className: ''}),
+        interactive: false, zIndexOffset: 500
+      }).addTo(circleGroup);
+      circle.bindTooltip('<b>' + nh.neighborhood + '</b><br>' + fmtShortPrice(nh.avg_price) + ' \u00b7 ' + nh.count + ' ilan \u00b7 \ud83d\udccd' + nh.distance_km + 'km', {className: 'custom-tooltip', direction: 'top', offset: [0, -r]});
+      circle.on('click', function() { selectNeighborhood(nh.neighborhood); });
+    })(n);
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>

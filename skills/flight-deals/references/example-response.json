@@ -1,0 +1,82 @@
+Full example response from https://www.flightlist.io/api/search.php
+
+Params: fly_from=airport:ESB, fly_to=city:LON, date_from=19/05/2026, date_to=17/06/2026, adults=1, children=0, infants=0, selected_cabins=M, curr=TRY, limit=10, sort=price, flight_type=oneway
+
+{
+    "search_id": "fd8d8796-04aa-457f-a171-d6869e928f9a",
+    "currency": "TRY",
+    "fx_rate": 52.846912,
+    "data": [
+        {
+            "id": "1f5b032d508200004a9f5079_0",
+            "flyFrom": "ESB",
+            "flyTo": "STN",
+            "cityFrom": "Ankara",
+            "cityCodeFrom": "ANK",
+            "cityTo": "London",
+            "cityCodeTo": "LON",
+            "countryFrom": {"code": "TR", "name": "Turkey"},
+            "countryTo": {"code": "GB", "name": "United Kingdom"},
+            "local_departure": "2026-06-06T08:25:00.000Z",
+            "utc_departure": "2026-06-06T05:25:00.000Z",
+            "local_arrival": "2026-06-06T10:50:00.000Z",
+            "utc_arrival": "2026-06-06T09:50:00.000Z",
+            "nightsInDest": null,
+            "quality": 119.89834906176758,
+            "distance": 2818.28,
+            "duration": {"departure": 15900, "return": 0, "total": 15900},
+            "price": 4469,
+            "conversion": {"EUR": 84.565017, "TRY": 4469},
+            "fare": {"adults": 4469, "children": 0, "infants": 0},
+            "airlines": ["VF"],
+            "bags_price": {"1": 42.5},
+            "baglimit": {
+                "hand_dimensions_sum": 118, "hand_height": 40, "hand_length": 55,
+                "hand_weight": 8, "hand_width": 23,
+                "hold_dimensions_sum": 158, "hold_height": 52, "hold_length": 78,
+                "hold_weight": 20, "hold_width": 28,
+                "personal_item_dimensions_sum": 85, "personal_item_height": 30,
+                "personal_item_length": 40, "personal_item_weight": 4, "personal_item_width": 15
+            },
+            "availability": {"seats": null},
+            "route": [
+                {
+                    "id": "1f5b032d508200004a9f5079_0",
+                    "combination_id": "1f5b032d508200004a9f5079",
+                    "flyFrom": "ESB",
+                    "flyTo": "STN",
+                    "cityFrom": "Ankara",
+                    "cityCodeFrom": "ANK",
+                    "cityTo": "London",
+                    "cityCodeTo": "LON",
+                    "local_departure": "2026-06-06T08:25:00.000Z",
+                    "utc_departure": "2026-06-06T05:25:00.000Z",
+                    "local_arrival": "2026-06-06T10:50:00.000Z",
+                    "utc_arrival": "2026-06-06T09:50:00.000Z",
+                    "airline": "VF",
+                    "flight_no": 531,
+                    "operating_carrier": "TK",
+                    "operating_flight_no": "",
+                    "fare_basis": "WLTEOW",
+                    "fare_category": "M",
+                    "fare_classes": "",
+                    "return": 0,
+                    "bags_recheck_required": false,
+                    "vi_connection": false,
+                    "guarantee": false,
+                    "equipment": null,
+                    "vehicle_type": "aircraft"
+                }
+            ],
+            "booking_token": "HbHB9...long_token...p87p",
+            "deep_link": "https://www.kiwi.com/deep?affilid=flightlistflightlistio&...",
+            "facilitated_booking_available": true,
+            "pnr_count": 1,
+            "has_airport_change": false,
+            "technical_stops": 0,
+            "throw_away_ticketing": false,
+            "hidden_city_ticketing": false,
+            "virtual_interlining": false
+        }
+    ]
+}

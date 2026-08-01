@@ -1,0 +1,107 @@
+# Region Presets for FlightList.io API
+# Comma-separated ISO 3166-1 alpha-2 country codes for fly_to / fly_from
+
+## Europe
+
+**schengen** (Schengen Area)
+AT,BE,BG,CZ,DK,EE,FI,FR,DE,GR,HU,IS,IT,LV,LI,LT,LU,MT,NL,NO,PL,PT,RO,SK,SI,ES,SE,CH,HR
+
+**eu** (European Union)
+AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE
+
+**europe** (wider Europe including non-EU)
+AL,AD,AM,AT,AZ,BY,BE,BA,BG,HR,CY,CZ,DK,EE,FI,FR,GE,DE,GR,HU,IS,IE,IT,KZ,XK,LV,LI,LT,LU,MT,MD,MC,ME,NL,MK,NO,PL,PT,RO,RU,SM,RS,SK,SI,ES,SE,CH,TR,UA,GB,VA
+
+**scandinavia** (Scandinavia / Nordic)
+DK,FI,IS,NO,SE
+
+**balkans** (Balkans)
+AL,BA,BG,HR,ME,MK,RS,SI,XK
+
+**baltic** (Baltic States)
+EE,LV,LT
+
+**central-europe** (Central Europe)
+AT,CH,CZ,DE,HU,LI,PL,SK
+
+**western-europe** (Western Europe + UK)
+BE,FR,IE,LU,MC,NL,GB
+
+**southern-europe** (Southern Europe / Mediterranean)
+AD,CY,ES,GR,IT,MT,PT,SM,VA
+
+**eastern-europe** (Eastern Europe / Slavic)
+BY,CZ,PL,RU,SK,UA
+
+## Americas
+
+**north-america** (North America)
+CA,MX,US
+
+**central-america** (Central America)
+BZ,CR,GT,HN,NI,PA,SV
+
+**caribbean** (Caribbean)
+AG,BS,BB,CU,DM,DO,GD,HT,JM,KN,LC,VC,TT
+
+**south-america** (South America)
+AR,BO,BR,CL,CO,EC,GY,PY,PE,SR,UY,VE
+
+**latin-america** (Latin America = Mexico + Central + South + Caribbean)
+MX,AR,BO,BR,CL,CO,CR,CU,DO,EC,GT,HN,NI,PA,PY,PE,SV,UY,VE,BZ,BS,BB,AG,DM,GD,HT,JM,KN,LC,VC,TT
+
+## Africa
+
+**north-africa** (North Africa / Maghreb)
+DZ,EG,LY,MA,SD,TN
+
+**west-africa** (West Africa)
+BJ,BF,CI,CV,GH,GN,GM,GW,LR,ML,MR,NE,NG,SL,SN,TG
+
+**east-africa** (East Africa)
+BI,ET,KE,MG,MW,MZ,RW,SO,TZ,UG,ZM,ZW
+
+**central-africa** (Central Africa)
+AO,CD,CF,CM,GA,GQ,ST,TD
+
+**southern-africa** (Southern Africa)
+BW,LS,NA,ZA,SZ
+
+**africa** (all of Africa)
+DZ,AO,BJ,BW,BF,BI,CV,CM,CF,TD,KM,CG,CD,CI,DJ,EG,GQ,ER,SZ,ET,GA,GM,GH,GN,GW,KE,LS,LR,LY,MG,MW,ML,MR,MU,MA,MZ,NA,NE,NG,RW,ST,SN,SC,SL,SO,ZA,SS,SD,TZ,TG,TN,UG,ZM,ZW
+
+## Asia
+
+**middle-east** (Middle East / MENA)
+AE,BH,EG,IQ,IR,JO,KW,LB,OM,PS,QA,SA,SY,YE
+
+**central-asia** (Central Asia)
+KZ,KG,TJ,TM,UZ
+
+**caucasus** (Caucasus)
+AM,AZ,GE
+
+**south-asia** (South Asia)
+AF,BD,BT,IN,LK,MV,NP,PK
+
+**southeast-asia** (Southeast Asia)
+BN,ID,KH,LA,MM,MY,PH,SG,TH,TL,VN
+
+**east-asia** (East Asia / Northeast Asia)
+CN,HK,JP,KP,KR,MN,MO,TW
+
+**asia** (all of Asia)
+AF,AM,AZ,BH,BD,BT,BN,KH,CN,CY,GE,HK,IN,ID,IR,IQ,IL,JP,JO,KZ,KP,KR,KW,KG,LA,LB,MO,MY,MV,MN,MM,NP,OM,PK,PS,PH,QA,SA,SG,KR,LK,SY,TJ,TH,TL,TR,TM,AE,UZ,VN,YE
+
+## Oceania
+
+**oceania**
+AU,FJ,KI,FM,MH,NR,NZ,PW,PG,WS,SB,TL,TO,TV,VU
+
+## Global / Mixed
+
+**cheap-from-ankara** (Historically cheap destinations from Ankara)
+AT,DE,HU,GB,RO,NL,PL,IT,BG
+
+**anywhere** (all countries — use to find cheapest globally, then filter)
+AF,AL,DZ,AD,AO,AG,AR,AM,AU,AT,AZ,BS,BH,BD,BB,BY,BE,BZ,BJ,BT,BO,BA,BW,BR,BN,BG,BF,BI,KH,CM,CA,CV,CF,TD,CL,CN,CO,KM,CG,CD,CR,CI,HR,CU,CY,CZ,DK,DJ,DM,DO,EC,EG,SV,GQ,ER,EE,SZ,ET,FJ,FI,FR,GA,GM,GE,DE,GH,GR,GD,GT,GN,GW,GY,HT,HN,HU,IS,IN,ID,IR,IQ,IE,IL,IT,JM,JP,JO,KZ,KE,KI,KP,KR,KW,KG,LA,LV,LB,LS,LR,LY,LI,LT,LU,MG,MW,MY,MV,ML,MT,MH,MR,MU,MX,FM,MD,MC,MN,ME,MA,MZ,MM,NA,NR,NP,NL,NZ,NI,NE,NG,MK,NO,OM,PK,PW,PS,PA,PG,PY,PE,PH,PL,PT,QA,RO,RU,RW,KN,LC,VC,WS,SM,ST,SA,SN,RS,SC,SL,SG,SK,SI,SB,SO,ZA,KR,SS,ES,LK,SD,SR,SE,CH,SY,TW,TJ,TZ,TH,TL,TG,TO,TT,TN,TR,TM,TV,UG,UA,AE,GB,US,UY,UZ,VU,VA,VE,VN,YE,ZM,ZW

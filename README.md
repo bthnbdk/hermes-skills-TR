@@ -1,2 +1,53 @@
-# hermes-skills-TR
-Türkiye icin ozel Hermes Agent skill koleksiyonu — emlak takibi, Migros fiyatlari, UYAP ictihatlari, biletinial etkinlikler ve daha fazlasi
+# 🇹🇷 Hermes Skills TR
+
+**Türkiye'den Hermes Agent kullananlar için özel hazırlanmış skill koleksiyonu.**
+
+[Hermes Agent](https://hermes-agent.nousresearch.com/docs), kişisel AI asistanınızdır — Telegram, e-posta ve yerel dosyalarınızla çalışır, sizin yerinize görevleri otomatikleştirir. Bu repodaki skill'ler, Hermes'in **Türkiye'ye özel** veri kaynaklarıyla (HepsiEmlak, Migros, UYAP, Biletinial, Türk havaalanları vb.) çalışmasını sağlar.
+
+## 📦 Neler Var?
+
+| Skill | Kategori | Ne Yapar? |
+|---|---|---|
+| [hepsiemlak-cankaya-watchdog](skills/hepsiemlak-cankaya-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (tüm Türkiye) |
+| [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Ankara'da tek tapulu villa arsası ilanlarını takip et |
+| [hepsiemlak-yatirim-analiz](skills/hepsiemlak-yatirim-analiz/README.md) | 📈 Emlak | Kiralık yatırım analizi: fiyat, kira getirisi, konum skorlaması |
+| [migros-market-arama](skills/migros-market-arama/README.md) | 🛒 Market | Migros Sanal Market'te ürün ve fiyat araştırması |
+| [biletinial-etkinlik-api](skills/biletinial-etkinlik-api/README.md) | 🎟️ Etkinlik | 84 şehirdeki konser/tiyatro/atölye etkinliklerini çek |
+| [emsal-uyap](skills/emsal-uyap/README.md) | ⚖️ Hukuk | Yargıtay emsal içtihatlarını toplu indir (emsal.uyap.gov.tr) |
+| [ithalat-agent](skills/ithalat-agent/README.md) | 🚢 Ticaret | Türkiye→UK ithalat şirket OS'u (ERPNext + Gmail + ajanlar) |
+| [flight-deals](skills/flight-deals/README.md) | ✈️ Seyahat | Ankara (ESB) çıkışlı ucuz uçuş fırsatlarını ara |
+
+## 🚀 Kurulum
+
+1. **Hermes Agent'ı kurun** (yoksa): [dokümantasyon](https://hermes-agent.nousresearch.com/docs)
+2. **Skill'leri indirin:**
+
+```bash
+git clone https://github.com/bthnbdk/hermes-skills-TR.git
+```
+
+3. **İstediğiniz skill'i Hermes'in skill klasörüne kopyalayın:**
+
+```bash
+cp -r hermes-skills-TR/skills/hepsiemlak-cankaya-watchdog ~/.hermes/skills/
+# veya tümünü:
+cp -r hermes-skills-TR/skills/* ~/.hermes/skills/
+```
+
+4. **Hermes'i yeniden başlatın** (veya yeni oturum açın) — skill'ler otomatik yüklenir.
+
+5. Her skill'in README'sindeki **kurulum ve kullanım** talimatlarını izleyin. Çoğu skill cron görevi (zamanlanmış otomatik çalıştırma) ile birlikte kullanılır.
+
+## 🛠️ Gereksinimler
+
+- Python 3.10+ (çoğu skill sadece standart kütüphane kullanır, ek kurulum gerekmez)
+- Hermes Agent (Telegram entegrasyonu önerilir — bildirimler için)
+- Bazı skill'ler ücretsiz/üyelikli servislere erişim gerektirir (örn. HepsiEmlak, Migros)
+
+## 📄 Lisans
+
+Bu repodaki skill'ler kişisel kullanım içindir. İlgili servislerin (HepsiEmlak, Migros, UYAP, Biletinial vb.) kullanım koşullarına uymanız gerekir. Skill'ler, resmi API'ler ve kamuya açık uç noktalar üzerinden çalışır; site içi kazıma yöntemleri kullanmaz.
+
+## 🤝 Katkı
+
+Türkiye'ye özel yeni bir skill eklemek veya mevcutları geliştirmek isterseniz PR açabilirsiniz. Skill'lerin **açıklamaları Türkçe** olmalıdır.
