@@ -2,7 +2,7 @@
 name: bing-rss-arama
 description: "Bing RSS arama — ücretsiz, API anahtarı gerektirmeyen web araması. https://www.bing.com/search?q=KEYWORD&format=rss ile 10 sonuç döner. Haber takibi, fiyat araştırması, keyword monitoring, rakip izleme için ideal. Python stdlib ile parse edilir, her agent ile çalışır."
 version: 1.0.0
-author: BatuBOT
+author: Turkce AI Skillleri Toplulugu
 ---
 
 # Bing RSS Arama

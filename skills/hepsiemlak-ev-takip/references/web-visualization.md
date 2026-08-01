@@ -20,7 +20,7 @@ Built with Python stdlib — no Flask, no npm. Chart.js v4 + Leaflet v1.9 from C
 
 **Haversine distance** for work-to-listing distance:
 ```python
-WORK_LAT, WORK_LON = 39.8897782, 32.8594033  # Batu'nun iş yeri, Çankaya
+WORK_LAT, WORK_LON = 39.8897782, 32.8594033  # referans noktası (örnek: iş yeri, Çankaya)
 ```
 
 ### SQLite Queries
@@ -85,7 +85,7 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map
 }).addTo(map);
 ```
 
-Always use Esri World Topo Map (terrain), not default OSM. Batu prefers clean, sade görünüm.
+Always use Esri World Topo Map (terrain), not default OSM. Kullanıcı sade, doğal görünüm tercih eder.
 
 ### Color Scale (price per m²)
 ```javascript
@@ -135,7 +135,7 @@ function fmtKm(d) { return d ? d.toFixed(1) + 'km' : '—'; }
 1. **All data loaded once** — `loadData()` fetches neighborhoods, all listings, trend, bargains, and stats in parallel via `Promise.all`. Filtering/sorting is instant client-side.
 2. **Tab switching** — on switch: clear listing markers, re-render map circles (for mahalle/ilan tabs), or clear all map layers (for piyasa/fırsat tabs).
 3. **Map layer management** — two persistent layer groups: `circleGroup` (neighborhood circles) and `listingMarkers` (individual listing dots). Cleared and rebuilt on tab switch.
-4. **No cluster labels** — removed in v2. Iteration: v1 had text labels → Batu said "çok karışık" → simplified to circles-only with hover tooltips.
+4. **No cluster labels** — removed in v2. Iteration: v1 had text labels → kullanıcı "çok karışık" dedi → simplified to circles-only with hover tooltips.
 5. **Room filter as chips** — `.room-chip` elements with `.active` toggle. Maintains `activeRooms` Set. All active by default.
 
 ## Weekly Report (`scripts/haftalik_piyasa_raporu.py`)

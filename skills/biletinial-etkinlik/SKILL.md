@@ -2,7 +2,7 @@
 name: biletinial-etkinlik
 description: "Biletinial etkinlik API'si — şehir bazlı konser/tiyatro/atölye/etkinlik listesi çekme. cityId haritası (84 şehir), sayfalama, rate limit, cron örüntüsü. Sade curl ile çalışır, auth yok."
 version: 1.0.0
-author: BatuBOT
+author: Turkce AI Skillleri Toplulugu
 ---
 
 # Biletinial Etkinlik

@@ -2,7 +2,7 @@
 name: migros-fiyat-arama
 description: Use when searching products and prices on Migros (Migros Sanal Market). Query their REST API for product search, price comparison, deal hunting, and meal planning.
 version: 1.4.0
-author: BatuBOT
+author: Turkce AI Skillleri Toplulugu
 license: MIT
 metadata:
   hermes:

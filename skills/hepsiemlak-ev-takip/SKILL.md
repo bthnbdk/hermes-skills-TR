@@ -2,7 +2,7 @@
 name: hepsiemlak-ev-takip
 description: "Monitor new property listings on HepsieEmlak for ANY city/district in Turkey. Reusable — configure {sehir}/{ilce} slugs, mahalle list, max price, work coordinates, and cron job for any location. Uses Python stdlib urllib, no external deps. SQLite-backed with AI scoring."
 version: 4.0.0
-author: Batu
+author: Turkce AI Skillleri Toplulugu
 ---
 
 # HepsiEmlak Ev Takip (Tüm Türkiye)
@@ -221,7 +221,7 @@ Kural:
 4. Yeni ilan **yoksa** → tamamen sessiz (hiçbir şey print etme)
 5. Mevcut script'ler arasında format tutarlılığı: **hepsiemlak_fetch.py** referans alınır
 
-**Batu'nun net talebi:** "Bunu böyle verme. Doğrudan analiz edip ver. Aynen Ankara'daki ev arama bildirimi gibi"
+**Kullanıcının net talebi:** "Bunu böyle verme. Doğrudan analiz edip ver. Aynen Ankara'daki ev arama bildirimi gibi"
 
 ### Örnek Job (her şehir için farklı script + job oluşturun)
 
@@ -441,7 +441,7 @@ Arka planda: `nohup python3 sehir_server.py &` veya terminal `background=true` i
 | `/api/trend` | JSON | Günlük fiyat trendi (price_history'den) |
 | `/api/bargains` | JSON | Fiyat düşen ilanlar (price_history × listings JOIN) |
 
-### Harita Tasarımı (Batu tercihleri)
+### Harita Tasarımı (Tercihler)
 
 - **Tile:** Esri World Topo Map (terrain). OpenStreetMap varsayılanı değil. Sade, doğal.
 - **Mahalle daireleri:** Renkli yarı-saydam circle marker. **İsim etiketi yok** — sadece hover tooltip. Karmaşa olmamalı.

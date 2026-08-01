@@ -49,7 +49,7 @@ def format_item(sehir, p):
 
 ## Yatırım Analizi İş Akışı (OSM + Kira Getirisi)
 
-Batu yatırım analizi istediğinde aşağıdaki adımlar uygulanır:
+Kullanıcı yatırım analizi istediğinde aşağıdaki adımlar uygulanır:
 
 1. **OSM çevre sorgusu**: Her ilan için hava mesafesindeki (500m-2km) hastane, okul, durak, üniversite, AVM/market sayısını OSM API ile çek
 2. **Kira getirisi tahmini**: Şehir + oda sayısı bazında ortalama kira değerini hesapla

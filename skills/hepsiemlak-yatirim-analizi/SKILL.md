@@ -2,7 +2,7 @@
 name: hepsiemlak-yatirim-analizi
 description: "Analyze HepsiEmlak listings for rental investment potential across ANY city in Turkey. Scoring: price, rental yield estimate, hospital/school proximity, floor, room type. Uses SQLite + AI analysis for on-demand queries."
 version: 1.0.0
-author: Batu
+author: Turkce AI Skillleri Toplulugu
 ---
 
 # HepsiEmlak Konut Yatırım Analizörü
@@ -17,7 +17,7 @@ HepsiEmlak API'sinden herhangi bir şehirde 1.000.000 - 1.500.000 TL bandında k
 - **Lokasyon:** Gelişmekte olan şehirler, hastane/okul yakını
 - **Kredi:** Krediye uygun (availableForLoanStatus=APPLICABLE)
 
-### 🗺️ Öncelikli Şehirler (Batu seçimi)
+### 🗺️ Öncelikli Şehirler (Varsayılan)
 
 | Şehir | Slug | Potansiyel | Gerekçe |
 |-------|------|:----------:|---------|

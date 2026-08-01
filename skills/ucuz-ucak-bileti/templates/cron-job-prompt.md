@@ -20,7 +20,7 @@ Requirements: {requirements}
 
 URL: https://www.flightlist.io/api/search.php?fly_from=airport%3A{airportFrom}&fly_to={destinationParam}&date_from={dd}%2F{mm}%2F{yyyy}&date_to={dd}%2F{mm}%2F{yyyy}&return_from={dd}%2F{mm}%2F{yyyy}&return_to={dd}%2F{mm}%2F{yyyy}&nights_in_dst_from={min}&nights_in_dst_to={max}&adults=1&selected_cabins=M&curr=TRY&limit=10&sort=price&max_stopovers={stops}&max_fly_duration={duration}&enable_vi=true&flight_type=return&adult_hand_bag=0&adult_hold_bag=0
 
-Fetch JSON, filter for nightsInDest range. Replace affilid=flightlistflightlistio with affilid=batuhanbudakkk. Convert EUR using fx_rate.
+Fetch JSON, filter for nightsInDest range. Replace affilid=flightlistflightlistio with the user's own affiliate ID (if any). Convert EUR using fx_rate.
 
 Output format (NO URLs anywhere — no bare URLs, no markdown links):
 

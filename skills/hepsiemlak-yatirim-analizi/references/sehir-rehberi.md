@@ -1,6 +1,6 @@
 # Yatırım Şehirleri Veritabanı
 
-Batu'nun yatırım stratejisi için seçilmiş şehirler, slug'ları ve puanlama gerekçeleri.
+Kullanıcının yatırım stratejisi için seçilmiş şehirler, slug'ları ve puanlama gerekçeleri.
 
 ## Mevcut Hedef Şehirler
 

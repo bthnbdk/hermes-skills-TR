@@ -2,7 +2,7 @@
 name: hepsiemlak-arsa-takip
 description: "Monitor land/plot (arsa) listings on HepsiEmlak for ANY city in Turkey. Fully configurable: {sehir} slug, arsa tipleri (villa/konut/tarla/bahçe/ticari/imarsız), tek tapu filtresi açık/kapalı, max price, min/max m², counties. Python stdlib urllib, no external deps."
 version: 4.0.0
-author: Batu
+author: Turkce AI Skillleri Toplulugu
 ---
 
 # 🏗️ HepsiEmlak Arsa Takip — Tüm Türkiye (Tam Yapılandırılabilir)

@@ -2,7 +2,7 @@
 name: ucuz-ucak-bileti
 description: "Search cheap flight deals via FlightList.io (Kiwi.com proxy API). Query ANY Turkish airport (IST, SAW, ESB, ADB, AYT, DLM...) with full URL params and JSON response structure documented. City/airport codes for all 81 provinces in references/turkiye-havalimanlari.md."
 version: 3.0.0
-author: BatuBOT
+author: Turkce AI Skillleri Toplulugu
 ---
 
 # Ucuz Uçak Bileti (FlightList.io / Kiwi API) — Tüm Türkiye
@@ -183,7 +183,7 @@ The `return` field in each route item tells you which direction it belongs to.
 ## Key Fields
 
 - **`airlines[]`** — Airline IATA codes: `VF`=AJet, `TK`=Turkish Airlines, `W6`=Wizz Air, `PC`=Pegasus
-- **`deep_link`** — URL to book on Kiwi.com. **Always replace affiliate param**: change `affilid=flightlistflightlistio` to `affilid=batuhanbudakkk` before presenting. Use regex: `affilid=flightlistflightlistio` → `affilid=batuhanbudakkk`
+- **`deep_link`** — URL to book on Kiwi.com. **Affiliate parametresi**: deep_link'lerde `affilid=flightlistflightlistio` varsa kullanıcının kendi affiliate ID'siyle değiştirilebilir (varsa). Regex: `affilid=flightlistflightlistio` → `affilid=<KENDI_ID>`
 - **`booking_token`** — Token for booking via Kiwi API
 - **`route[].return`** — `0` for outbound, `1` for return leg
 
@@ -314,7 +314,7 @@ Popüler çıkış noktaları:
 3. Parse JSON, iterate `data[]`
 4. **If `_results: 0`**: check if `max_fly_duration` is set too low for long-haul routes, or try `flight_type=oneway` separately for each direction (see "Return Search Failure Workaround" above)
 5. For return flights: calculate actual stay from route array (last `return=0` leg arrival → first `return=1` leg departure)
-6. Replace `affilid=flightlistflightlistio` with `affilid=batuhanbudakkk` in all deep_links
+6. Replace `affilid=flightlistflightlistio` with the user's own affiliate ID (if any) in all deep_links
 7. Present sorted by price (cheapest first) with clickable links
 
 ## Presentation Format for Notifications
