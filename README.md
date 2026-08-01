@@ -8,7 +8,7 @@
 
 | Skill | Kategori | Ne Yapar? |
 |---|---|---|
-| [hepsiemlak-cankaya-watchdog](skills/hepsiemlak-cankaya-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (81 il, şehir/ilçe seçilebilir) |
+| [hepsiemlak-ev-watchdog](skills/hepsiemlak-ev-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (81 il, şehir/ilçe seçilebilir) |
 | [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Herhangi bir şehirde tek tapulu villa arsası ilanlarını takip et |
 | [hepsiemlak-yatirim-analiz](skills/hepsiemlak-yatirim-analiz/README.md) | 📈 Emlak | Kiralık yatırım analizi: fiyat, kira getirisi, konum skorlaması |
 | [migros-market-arama](skills/migros-market-arama/README.md) | 🛒 Market | Migros Sanal Market'te ürün ve fiyat araştırması |
@@ -28,7 +28,7 @@ git clone https://github.com/bthnbdk/hermes-skills-TR.git
 3. **İstediğiniz skill'i Hermes'in skill klasörüne kopyalayın:**
 
 ```bash
-cp -r hermes-skills-TR/skills/hepsiemlak-cankaya-watchdog ~/.hermes/skills/
+cp -r hermes-skills-TR/skills/hepsiemlak-ev-watchdog ~/.hermes/skills/
 # veya tümünü:
 cp -r hermes-skills-TR/skills/* ~/.hermes/skills/
 ```
@@ -43,7 +43,7 @@ Aşağıdaki skill'ler **tüm Türkiye'de** çalışacak şekilde tasarlanmışt
 
 | Skill | Nasıl Yapılandırılır? |
 |---|---|
-| hepsiemlak-cankaya-watchdog | `SEHIR` + `ILCE` slug'larını değiştirin (örn. `istanbul` + `kadikoy`) |
+| hepsiemlak-ev-watchdog | `SEHIR` + `ILCE` slug'larını değiştirin (örn. `istanbul` + `kadikoy`) |
 | hepsiemlak-arsa-watchdog | `{sehir}` slug'ı + `max_price` (örn. `izmir` + 3M TL) |
 | flight-deals | `fly_from=airport:{IATA}` (örn. `airport:IST`, `airport:ADB`) |
 

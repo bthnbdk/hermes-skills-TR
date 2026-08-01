@@ -265,5 +265,5 @@ Kullanıcı "yatırımlık daire bul" dediğinde:
 
 ## 🔗 İlgili Skill'ler
 
-- `hepsiemlak-cankaya-watchdog` — Çankaya konut takibi (bireysel kullanım)
+- `hepsiemlak-ev-watchdog` — konut takibi (bireysel kullanım)
 - `maps` — OpenStreetMap POI sorgulama (hastane/okul için)

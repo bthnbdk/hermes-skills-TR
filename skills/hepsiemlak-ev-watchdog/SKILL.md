@@ -1,5 +1,5 @@
 ---
-name: hepsiemlak-cankaya-watchdog
+name: hepsiemlak-ev-watchdog
 description: "Monitor new property listings on HepsieEmlak for ANY city/district in Turkey. Reusable — configure {sehir}/{ilce} slugs, mahalle list, max price, work coordinates, and cron job for any location. Uses Python stdlib urllib, no external deps. SQLite-backed with AI scoring."
 version: 4.0.0
 author: Batu
@@ -462,7 +462,7 @@ Bu skill GitHub'da yedeklenir: https://github.com/bthnbdk/hermes-skills
 Güncelleme yapınca:
 ```bash
 cd ~/hermes-skills
-cp -r ~/.hermes/skills/devops/hepsiemlak-cankaya-watchdog/* skills/devops/hepsiemlak-cankaya-watchdog/
+cp -r ~/.hermes/skills/devops/hepsiemlak-ev-watchdog/* skills/devops/hepsiemlak-ev-watchdog/
 cp ~/.hermes/scripts/hepsiemlak_fetch.py scripts/
 git add -A && git commit -m "update" && git push
 ```

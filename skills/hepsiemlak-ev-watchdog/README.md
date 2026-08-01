@@ -33,7 +33,7 @@ Skill ilk olarak Ankara Çankaya için geliştirildi, ancak **tamamen yeniden ya
 ## 📥 Kurulum
 
 ```bash
-cp -r skills/hepsiemlak-cankaya-watchdog ~/.hermes/skills/
+cp -r skills/hepsiemlak-ev-watchdog ~/.hermes/skills/
 ```
 
 Ardından Hermes'e şöyle bir istek verin:
