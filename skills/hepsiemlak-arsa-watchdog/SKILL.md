@@ -1,31 +1,57 @@
 ---
 name: hepsiemlak-arsa-watchdog
-description: "Monitor villa plots (villa arsası) with single title deed (tek tapu) on HepsiEmlak for ANY city in Turkey. Configure with {sehir} slug (ankara, istanbul, izmir...) — filters by subCategory (Zoned Villa/Residential), max price configurable. Python stdlib urllib, no external deps."
-version: 3.0.0
+description: "Monitor land/plot (arsa) listings on HepsiEmlak for ANY city in Turkey. Fully configurable: {sehir} slug, arsa tipleri (villa/konut/tarla/bahçe/ticari/imarsız), tek tapu filtresi açık/kapalı, max price, min/max m², counties. Python stdlib urllib, no external deps."
+version: 4.0.0
 author: Batu
 ---
 
-# HepsiEmlak Villa Arsası (Tek Tapu) Watchdog — Tüm Türkiye
+# HepsiEmlak Arsa Watchdog — Tüm Türkiye (Tam Yapılandırılabilir)
 
-HepsiEmlak API'sinden herhangi bir şehirde satılık **tek tapulu villa arsalarını** otomatik izleyen sistem.
-Sadece imarlı villa ve imarlı konut arsalarını takip eder — tarla, bahçe, ticari arsalar filtrelenir.
-SQLite veritabanı, AI puanlama ve Telegram bildirimi ile. **Şehir seçimi tamamen size bağlı.**
+HepsiEmlak API'sinden herhangi bir şehirde satılık **arsa ilanlarını** otomatik izleyen sistem.
+**Ne izleyeceğiniz tamamen size bağlı**: sadece tek tapulu villa arsası, sadece tarla, imarlı konut + bahçe kombinasyonu, hepsi birden — hepsi mümkün.
+SQLite veritabanı, AI puanlama ve Telegram bildirimi ile.
 
-## 🎯 Şehir Yapılandırması
+## 🎯 Yapılandırma (İlk Adım — Her Şey Değiştirilebilir)
 
 | Değişken | Örnek | Açıklama |
 |----------|-------|----------|
 | `{sehir}` | `ankara`, `istanbul`, `izmir`, `antalya`, `bursa`... | HepsiEmlak URL slug'ı (Türkçe karakterler ASCII'ye çevrilir: `çankırı` → `cankiri`) |
 | `{SEHIR_ADI}` | `Ankara`, `İstanbul`... | Bildirimlerde görünen şehir adı |
+| `arsa_tipleri` | `["zoned_villa", "zoned_residential"]` | Takip edilecek arsa tipleri (aşağıdaki tablo) — **boş = hepsi** |
+| `tek_tapu` | `True` veya `False` | Sadece tek tapulu (müstakil) arsalar mı? `False` = hisseli dahil |
 | `max_price` | `2500000` | Maks fiyat (TL) — şehre göre ayarlayın |
+| `min_sqm` / `max_sqm` | `500` / `2000` | Arsa büyüklüğü aralığı (boş = sınırsız) |
 | `counties` | `golbasi` veya boş | İlçe filtresi (boş = tüm ilçeler) |
 | `preferred_counties` | `["etimesgut", "sincan"]` | Puanlama'da tercih edilen ilçeler |
 
 **Tüm 81 il için slug listesi:** `references/turkiye-sehirleri.csv` (HepsiEmlak URL formatında)
 
-Kurulum örneği — İzmir için:
+### 🏷️ Arsa Tipleri (API `subCategory.typeName`)
+
+| API'den gelen (`typeName`) | Türkçe | Varsayılan puan | Varsayılan kabul |
+|---------------------------|--------|:----:|:-----:|
+| `Zoned - Villa` | İmarlı Villa | **20** 🥇 | ✅ |
+| `Zoned - Residential` | İmarlı - Konut | 8 | ✅ |
+| `Field` | Tarla | 5 | ❌ (kapalı) |
+| `Garden` | Bahçe | 6 | ❌ (kapalı) |
+| `Zoned - Commercial` | İmarlı - Ticari | 10 | ❌ (kapalı) |
+| `Unzoned` / diğer | İmarsız / Diğer | 3 | ❌ (kapalı) |
+
+> 💡 **`arsa_tipleri` listesiyle hangilerinin takip edileceğini seçin.** Boş bırakılırsa API'den gelen tüm tipler izlenir (filtre yok). Puanlar da ihtiyaca göre değiştirilebilir — örn. tarla yatırımı yapan biri `Field`'a 20 puan verebilir.
+
+Kurulum örnekleri:
 ```
+# Sadece tek tapulu villa arsası (varsayılan):
 HepsiEmlak İzmir'de tek tapulu, 3 milyon TL altı villa arsası ilanlarını günde 2 kez kontrol et
+
+# İmarlı konut + bahçe, hisseli dahil:
+HepsiEmlak Bursa'da imarlı konut ve bahçe arsalarını 2 milyon TL altı takip et, hisseli tapu da olsun
+
+# Tarla yatırımı:
+HepsiEmlak Konya'da 1000-5000 m² tarla ilanlarını 1 milyon TL altı izle
+
+# Her şey (filtre yok):
+HepsiEmlak Antalya'da tüm arsa ilanlarını takip et
 ```
 
 ## 🧠 API
@@ -59,36 +85,52 @@ HepsiEmlak İzmir'de tek tapulu, 3 milyon TL altı villa arsası ilanlarını g�
 | `detailUrl` | ⚠️ `/en/` prefix'i **VAR** — strip etmeyi unutma! |
 | `identificationNo` | Arsa için varsa parsel numarası |
 
+### Tek Tapu (Müstakil) Tespiti
+
+API'de `tek tapu` alanı doğrudan yok — aşağıdaki sinyallerle çıkarım yapılır:
+
+| Sinyal | Anlamı |
+|--------|--------|
+| `title` veya `description` içinde "tek tapu", "müstakil tapu", "tek parsel" | ✅ Tek tapu |
+| `identificationNo` dolu | Parsel numarası var (genelde tek tapu) |
+| `title` içinde "hisseli", "hisse" | ❌ Hisseli tapu |
+| Başlıkta "ifraz", "tevhit" | Parsel işlemi var — dikkat |
+
+```python
+TEK_TAPU_KEYWORDS = ["tek tapu", "müstakil tapu", "tek parsel", "tam tapu"]
+HISSELI_KEYWORDS = ["hisseli", "hisse"]
+
+def tek_tapu_mu(item) -> bool:
+    text = (item.get("title", "") + " " + item.get("description", "")).lower()
+    if any(k in text for k in HISSELI_KEYWORDS):
+        return False
+    if item.get("identificationNo"):
+        return True
+    return any(k in text for k in TEK_TAPU_KEYWORDS)
+```
+
+> ⚠️ **Önemli:** `tek_tapu=True` ise sadece kesin tek tapu sinyali olanlar gösterilir. `tek_tapu=False` ise bu filtre hiç uygulanmaz. Belirsiz durumlarda `title`/`description`'ı kullanıcıya gösterip karar bırakılabilir.
+
 ### Filtreleme Parametreleri (test edilmiş)
 
 | Param | Değer | Etki |
 |-------|-------|------|
-| `p32` | `2500000` | Maks 2.5M TL (villa arsası) |
+| `p32` | `2500000` | Maks 2.5M TL |
 | `counties` | `golbasi` | Sadece Gölbaşı |
 | `sortField` | `UPDATED_DATE` | Güncellenme tarihine göre |
 | `sortDirection` | `DESC` | En yeni en üstte |
 
-## 📊 Puanlama Kriterleri (Villa Arsası)
+## 📊 Puanlama Kriterleri (Yapılandırılabilir)
 
 | Kriter | Ağırlık | Açıklama |
 |--------|:-------:|----------|
 | 💰 **Toplam Fiyat** | 25% | **Bütçe (0-20):** şehre göre alt/üst sınır ayarlanır · **Piyasa (0-5):** ilçe m² fiyat ortalamasına göre |
 | 💵 **m² Fiyatı** | 15% | Düşük m² fiyatı = yüksek puan |
-| 📏 **Arsa Büyüklüğü** | 10% | Orta büyüklük (500-2000m²) ideal |
-| 🏷️ **Arsa Tipi** | 15% | İmarlı Villa=20, İmarlı Konut=8 (villa arsası odaklı) |
+| 📏 **Arsa Büyüklüğü** | 10% | İdeal aralık yapılandırılır (varsayılan 500-2000m²; tarla için 2000-10000m² olabilir) |
+| 🏷️ **Arsa Tipi** | 15% | `arsa_tipleri` tablosundaki puanlar — ihtiyaca göre değiştirin |
 | 📍 **İlçe** | 20% | Tercih edilen ilçeler — **şehre göre yapılandırılır** |
 | 📸 **Fotoğraf** | 10% | 10+ foto = 10p |
 | 🎥 **Video** | 5% | Varsa 5p |
-
-### Arsa Tipi Puanları (Villa Odaklı — tüm şehirlerde aynı)
-
-⚠️ Sadece `Zoned - Villa` ve `Zoned - Residential` tipleri gösterilir. Tarla, bahçe, ticari arsalar **otomatik filtrelenir**.
-
-| API'den gelen (`typeName`) | Türkçe | Puan | Kabul |
-|---------------------------|--------|:----:|:-----:|
-| `Zoned - Villa` | İmarlı Villa | **20** 🥇 | ✅ Villa arsası |
-| `Zoned - Residential` | İmarlı - Konut | 8 | ✅ Villa yapılabilir |
-| Diğer | Tarla/Bahçe/Ticari | — | ❌ Filtrelenir |
 
 ### İlçe Puanları — Şehir Bazlı Yapılandırma
 
@@ -189,6 +231,7 @@ CREATE TABLE listings (
     image_count INTEGER,
     has_video INTEGER,
     identification_no TEXT,    -- parsel no
+    tek_tapu INTEGER,          -- 1/0 (çıkarım)
     raw_data TEXT              -- tüm API JSON
 );
 
@@ -211,7 +254,7 @@ CREATE TABLE scan_log (
 ```python
 cronjob(
     action='create',
-    name='HepsiEmlak {SEHIR} Villa Arsasi (Tek Tapu)',
+    name='HepsiEmlak {SEHIR} Arsa ({TIpler})',
     script='hepsiemlak_arsa_fetch.py',
     no_agent=True,
     schedule='0 */3 * * *',  # her 3 saatte
@@ -223,9 +266,9 @@ cronjob(
 ## 📝 Çıktı Formatı
 
 ```
-🏡 **Yeni Villa Arsası (Tek Tapu) — {SEHIR}**
-📅 27.05.2026 15:00  |  📊 500 ilan içinden 3 villa arsası uygun
-🔑 Sadece tek tapulu, imarlı villa arsaları
+🏡 **Yeni Arsa İlanı — {SEHIR}**
+📅 27.05.2026 15:00  |  📊 500 ilan içinden 3 uygun
+🔑 Filtre: {arsa_tipleri} · {tek_tapu: "tek tapu" | "hisseli dahil"} · ≤{max_price} TL
 
 **76** 🟩🟩🟩🟩🟩🟩🟩⬜⬜⬜
 **2,100,000 TL** · Gölbaşı · İkizce · 850m² · 2,470 TL/m²
@@ -233,6 +276,14 @@ Zoned - Villa · 🏡Villa arsası · Tek tapu ✅ · 💰Uygun fiyat · 📊Piy
 🔊 Gelişen bölge, Mogan gölü etkisi
 🔗 link
 ```
+
+Tip etiketleri:
+- `Zoned - Villa` → 🏡Villa arsası
+- `Zoned - Residential` → 🏠Konut arsası
+- `Field` → 🌾Tarla
+- `Garden` → 🌳Bahçe
+- `Zoned - Commercial` → 🏢Ticari arsa
+- Diğer/İmarsız → 📄İmarsız/Diğer
 
 ### Fiyat Puanı Detayı (0-25)
 
@@ -248,7 +299,7 @@ diff_pct = (price_per_sqm - avg_pps) / avg_pps * 100
 # %15+ altında=5p | %5-15 altı=4p | ±%5=3p | %5-15 üstü=2p | %15-30 üstü=1p | %30+üstü=0p
 ```
 
-Çıktı highlight'ları: `📊Piyasanın altında` (piyasa ≥4) · `📊%X ucuz` (fark < -%10) · `🏡Villa arsası · Tek tapu ✅`
+Çıktı highlight'ları: `📊Piyasanın altında` (piyasa ≥4) · `📊%X ucuz` (fark < -%10) · `Tek tapu ✅` (tek_tapu=True ise)
 
 ## ⚠️ Filtreleme
 
@@ -258,6 +309,7 @@ diff_pct = (price_per_sqm - avg_pps) / avg_pps * 100
 - `sqm.price` = m² fiyatı (TL/m²) — önemli kriter
 - `sqm.grossSqm[0]` = arsa büyüklüğü
 - `identificationNo` = parsel numarası (varsa)
+- `tek_tapu=True` ise sadece kesin tek tapu sinyali olanlar; `False` ise filtre yok
 
 ## 📂 Skill Files
 

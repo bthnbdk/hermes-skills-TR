@@ -9,7 +9,7 @@
 | Skill | Kategori | Ne Yapar? |
 |---|---|---|
 | [hepsiemlak-ev-watchdog](skills/hepsiemlak-ev-watchdog/README.md) | 🏠 Emlak | HepsiEmlak'ta yeni ilanları otomatik takip et (81 il, şehir/ilçe seçilebilir) |
-| [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Herhangi bir şehirde tek tapulu villa arsası ilanlarını takip et |
+| [hepsiemlak-arsa-watchdog](skills/hepsiemlak-arsa-watchdog/README.md) | 🏗️ Emlak | Herhangi bir şehirde arsa ilanlarını takip et (tip/tapu/fiyat filtreleri yapılandırılabilir) |
 | [hepsiemlak-yatirim-analiz](skills/hepsiemlak-yatirim-analiz/README.md) | 📈 Emlak | Kiralık yatırım analizi: fiyat, kira getirisi, konum skorlaması |
 | [migros-market-arama](skills/migros-market-arama/README.md) | 🛒 Market | Migros Sanal Market'te ürün ve fiyat araştırması |
 | [biletinial-etkinlik-api](skills/biletinial-etkinlik-api/README.md) | 🎟️ Etkinlik | 84 şehirdeki konser/tiyatro/atölye etkinliklerini çek |
@@ -44,7 +44,7 @@ Aşağıdaki skill'ler **tüm Türkiye'de** çalışacak şekilde tasarlanmışt
 | Skill | Nasıl Yapılandırılır? |
 |---|---|
 | hepsiemlak-ev-watchdog | `SEHIR` + `ILCE` slug'larını değiştirin (örn. `istanbul` + `kadikoy`) |
-| hepsiemlak-arsa-watchdog | `{sehir}` slug'ı + `max_price` (örn. `izmir` + 3M TL) |
+| hepsiemlak-arsa-watchdog | `{sehir}` slug'ı + `arsa_tipleri` + `tek_tapu` (örn. `izmir` + villa/konut + hisseli dahil) |
 | flight-deals | `fly_from=airport:{IATA}` (örn. `airport:IST`, `airport:ADB`) |
 
 81 ilin HepsiEmlak slug listesi: `skills/hepsiemlak-arsa-watchdog/references/turkiye-sehirleri.csv`
