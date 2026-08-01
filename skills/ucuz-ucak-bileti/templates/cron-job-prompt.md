@@ -1,8 +1,8 @@
 # Cron Job Prompt Template for Flight Monitoring
 
 Use this template when the user asks to monitor a new route.
-Deliver all results to the user's notification channel (örn. telegram:-1003839224584 @bildirimbb).
-Always set deliver="telegram:-1003839224584" (veya kullanıcının kendi kanalı).
+Deliver all results to the user's notification channel (örneğin Telegram kanalı, e-posta vb.).
+Bildirim hedefini `<KANAL>` olarak yapılandırın (Hermes'te: `deliver="<KANAL>"`).
 
 ## Generic Template
 
@@ -10,7 +10,7 @@ Name: "{cityFrom}-{cityTo} Flight Monitor"
 Schedule: "7d" (weekly) or "3d" (every 3 days)
 Repeat: forever
 Skills: ["ucuz-ucak-bileti"]
-Deliver: "telegram:-1003839224584"
+Deliver: "<KANAL>"
 
 ## Prompt Template
 

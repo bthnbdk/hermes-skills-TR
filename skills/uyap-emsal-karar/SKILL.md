@@ -11,33 +11,33 @@ author: BatuBOT
 
 ## CLI Tool
 
-Script at `~/.hermes/scripts/emsal_uyap.py`
+Script at `<calisma_dizini>/emsal_uyap.py` (agent bağımsız — doğrudan python3 ile çalışır)
 
 ### Single Commands
 
 ```bash
 # Simple keyword search
-python3 ~/.hermes/scripts/emsal_uyap.py search "ihale"
+python3 <calisma_dizini>/emsal_uyap.py search "ihale"
 
 # Search with pagination + limit
-python3 ~/.hermes/scripts/emsal_uyap.py search "kira sözleşmesi" --max 20 --page-size 50
+python3 <calisma_dizini>/emsal_uyap.py search "kira sözleşmesi" --max 20 --page-size 50
 
 # Export to CSV
-python3 ~/.hermes/scripts/emsal_uyap.py search "iş kazası" --max 100 --csv /tmp/is_kazasi.csv
+python3 <calisma_dizini>/emsal_uyap.py search "iş kazası" --max 100 --csv /tmp/is_kazasi.csv
 
 # Export to JSON
-python3 ~/.hermes/scripts/emsal_uyap.py search "tahliye" --max 1000 --json /tmp/tahliye.json
+python3 <calisma_dizini>/emsal_uyap.py search "tahliye" --max 1000 --json /tmp/tahliye.json
 
 # Advanced search with filters
-python3 ~/.hermes/scripts/emsal_uyap.py advanced "tazminat" \
+python3 <calisma_dizini>/emsal_uyap.py advanced "tazminat" \
   --court "İstanbul Bölge Adliye Mahkemesi 13. Hukuk Dairesi" \
   --start-date 01.01.2020 --end-date 31.12.2023 --max 50
 
 # Get full decision text
-python3 ~/.hermes/scripts/emsal_uyap.py get-doc 702706800
+python3 <calisma_dizini>/emsal_uyap.py get-doc 702706800
 
 # Full pipeline: search + download all matching decisions
-python3 ~/.hermes/scripts/emsal_uyap.py fetch-all "icra hukuk" \
+python3 <calisma_dizini>/emsal_uyap.py fetch-all "icra hukuk" \
   --output-dir /tmp/kararlar/ --max 50
 ```
 
@@ -67,7 +67,7 @@ QUERIES = [
 # 2. Search each query (max 15-20 per category is enough for case law research)
 all_sources = {}  # id -> {meta, categories}
 for label, keyword in QUERIES:
-    os.system(f"python3 ~/.hermes/scripts/emsal_uyap.py search \"{keyword}\" --max 15 --page-size 15 --json {OUT}/{label}.json 2>/dev/null")
+    os.system(f"python3 <calisma_dizini>/emsal_uyap.py search \"{keyword}\" --max 15 --page-size 15 --json {OUT}/{label}.json 2>/dev/null")
 
 # 3. Collect unique document IDs
 for f in glob.glob(f"{OUT}/0*.json"):

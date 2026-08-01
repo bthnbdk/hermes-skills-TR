@@ -27,7 +27,11 @@ GET https://biletinial.com/GetAllEventsByCity?cityId={id}&langId=1&countryId=3&l
 ## 📥 Kurulum
 
 ```bash
+# Hermes:
 cp -r skills/biletinial-etkinlik ~/.hermes/skills/
+
+# Diğer agent'lar (Claude Code, Codex, Python vb.):
+# Skill klasörünü kendi çalışma dizininize kopyalayın, script'leri python3 ile çalıştırın.
 ```
 
 Hermes'e örnek istekler:

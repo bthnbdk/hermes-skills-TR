@@ -1,23 +1,27 @@
-# Migros İndirim Watchdog — Cron Job
+# Migros İndirim Watchdog — Zamanlanmış Görev
 
-`~/.hermes/scripts/migros_indirim_watchdog.py` isimli Python script'i ile 10 kategorideki yeni indirimleri otomatik takip eder.
+`migros_indirim_watchdog.py` isimli Python script'i ile 10 kategorideki yeni indirimleri otomatik takip eder. Agent bağımsız — herhangi bir zamanlayıcıyla çalışır.
 
 ## Kurulum
 
-Script zaten `~/.hermes/scripts/migros_indirim_watchdog.py` yolunda. Cron job şu şekilde oluşturulur:
+Script'i bir çalışma dizinine kopyalayın, ardından zamanlayıcıya bağlayın:
 
-```
+```bash
+# Seçenek A — Sistem cron:
+0 9,18 * * * cd <calisma_dizini> && python3 migros_indirim_watchdog.py >> watchdog.log 2>&1
+
+# Seçenek B — Hermes:
 cronjob action=create \
   name="migros-indirim-watchdog" \
   schedule="0 9,18 * * *" \
   script="migros_indirim_watchdog.py" \
   no_agent=true \
-  deliver="telegram:-1003839224584"
+  deliver="<KANAL>"
 ```
 
-- `no_agent=true` — script stdout'u direkt teslim eder
+- Script stdout'u direkt bildirim kanalına gider
 - Çıktı BOŞSA sessiz — yeni indirim yok demektir
-- `deliver` parametresi hedef kanala göre ayarlanır
+- Hermes'te `deliver` parametresi hedef kanala göre ayarlanır
 
 ## Kapsanan Kategoriler (10 adet)
 
@@ -47,7 +51,7 @@ Pet ürünleri (köpek maması, kedi maması, kum, akvaryum vb.) tüm kategorile
 
 ## Durum Takibi
 
-- `~/.hermes/migros_discount_state.json` — state dosyası
+- `<calisma_dizini>/migros_discount_state.json` — state dosyası
 - Her ürünün önceki discountRate/Migroskop/CROSS_PROMOTED/CRM durumunu hatırlar
 - Sadece **yeni çıkan** veya **artış gösteren** indirimleri bildirir
 - 7 gün görülmeyen ürünler temizlenir (state şişmesin)

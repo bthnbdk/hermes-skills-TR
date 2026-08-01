@@ -207,7 +207,7 @@ def tek_tapu_mu(item) -> bool:
 
 ## 🗄️ SQLite Veritabanı
 
-**Dosya:** `~/.hermes/hepsiemlak_arsa_{sehir}.db` (örn: `hepsiemlak_arsa_istanbul.db`)
+**Dosya:** `~/hepsiemlak_arsa_{sehir}.db` (örn: `hepsiemlak_arsa_istanbul.db`)
 
 ### Tablolar
 
@@ -249,18 +249,27 @@ CREATE TABLE scan_log (
 );
 ```
 
-## 🚀 Cron Job Kurulumu
+## ⏰ Zamanlanmış Görev Kurulumu (Agent Bağımsız)
 
-```python
+Script bağımsız Python'dur — herhangi bir zamanlayıcıyla çalışır:
+
+```bash
+# Seçenek A — Sistem cron (her ortamda):
+0 */3 * * * cd <calisma_dizini> && python3 hepsiemlak_arsa_fetch.py >> arsa.log 2>&1
+
+# Seçenek B — Hermes:
 cronjob(
     action='create',
     name='HepsiEmlak {SEHIR} Arsa ({TIpler})',
     script='hepsiemlak_arsa_fetch.py',
     no_agent=True,
     schedule='0 */3 * * *',  # her 3 saatte
-    deliver='telegram:-1003839224584',
-    workdir='/home/batu/.hermes'
+    deliver='<KANAL>',
+    workdir='<WORKDIR>'
 )
+
+# Seçenek C — Doğrudan:
+python3 hepsiemlak_arsa_fetch.py
 ```
 
 ## 📝 Çıktı Formatı

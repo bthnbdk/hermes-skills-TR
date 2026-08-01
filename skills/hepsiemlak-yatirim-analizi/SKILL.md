@@ -122,8 +122,8 @@ Kullanıcı "yatırımlık analiz yap" dediğinde:
 ```python
 import subprocess, json, time, sqlite3
 
-MAPS = os.path.expanduser("~/.hermes/skills/productivity/maps/scripts/maps_client.py")
-DB = os.path.expanduser("~/.hermes/hepsiemlak_yatirim.db")
+MAPS = os.path.expanduser("<maps_client.py yolu — maps skill'i kuruluysa kullanılır>")
+DB = os.path.expanduser("~/hepsiemlak_yatirim.db")  # kendi çalışma dizininiz
 
 # 1. DB'den sadece mantıklı ilanları çek (1+0, 1+1, 2+1, Stüdyo, <200m²)
 conn = sqlite3.connect(DB)
@@ -204,7 +204,7 @@ Hedef: **%7+ yıllık getiri** (Türkiye'de ideal kira getirisi %5-8 arasıdır)
 
 Her şehir için ayrı DB veya tek DB'de şehir sütunu:
 
-**Dosya:** `~/.hermes/hepsiemlak_yatirim.db`
+**Dosya:** `~/hepsiemlak_yatirim.db` (kendi çalışma dizininizde)
 
 ```sql
 CREATE TABLE listings (
@@ -236,7 +236,7 @@ CREATE TABLE listings (
 
 ```bash
 # Tek seferlik: gelişen şehirleri tara
-python3 ~/.hermes/scripts/hepsiemlak_yatirim_tara.py
+python3 <calisma_dizini>/hepsiemlak_yatirim_tara.py
 
 # Şehir listesi: istanbul,ankara,izmir,bursa,antalya,eskişehir...
 ```

@@ -21,7 +21,11 @@ Migros Sanal Market'in **resmi REST API'si** üzerinden çalışır (site kazım
 ## 📥 Kurulum
 
 ```bash
+# Hermes:
 cp -r skills/migros-fiyat-arama ~/.hermes/skills/
+
+# Diğer agent'lar (Claude Code, Codex, Python vb.):
+# Skill klasörünü kendi çalışma dizininize kopyalayın, script'leri python3 ile çalıştırın.
 ```
 
 Hermes'e örnek istekler:

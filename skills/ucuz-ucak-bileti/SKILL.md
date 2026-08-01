@@ -231,7 +231,7 @@ Exclude countries by removing their codes from the list.
 Use `limit=5` to minimize API calls and token burn. Monitor one-way or return prices and alert when below user's threshold.
 
 See `templates/cron-job-prompt.md` for reusable prompt template. Key rules:
-- Always set `deliver="telegram:-1003839224584"` for Batu's notification channel
+- Always set `deliver="<KANAL>"` for the user's notification channel
 - Schedule format: `3d` (every 3 days) or `7d` (weekly)
 - Use the compact emoji format in "Presentation Format for Notifications" section
 - **No URLs anywhere** — no markdown links, no bare URLs. They trigger Telegram link previews.
@@ -258,7 +258,7 @@ Bu skill GitHub'da yedeklenir:
 Güncelleme için:
 ```bash
 cd ~/hermes-skills
-cp -r ~/.hermes/skills/travel/ucuz-ucak-bileti/* skills/travel/ucuz-ucak-bileti/
+cp -r <skill_yolu>/* skills/ucuz-ucak-bileti/
 git add -A && git commit -m "update ucuz-ucak-bileti" && git push
 ```
 
@@ -319,7 +319,7 @@ Popüler çıkış noktaları:
 
 ## Presentation Format for Notifications
 
-When sending flight deal notifications to Batu's channel, use this exact format. **No intro text, no outro text, no warnings, no commentary** — just the raw flight data. **NO bare URLs, NO markdown links** — they trigger Telegram link previews that break the layout.
+When sending flight deal notifications to the user's channel, use this exact format. **No intro text, no outro text, no warnings, no commentary** — just the raw flight data. **NO bare URLs, NO markdown links** — they trigger link previews that break the layout.
 
 **Exact format (copy this verbatim):**
 ```

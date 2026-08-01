@@ -140,7 +140,7 @@ function fmtKm(d) { return d ? d.toFixed(1) + 'km' : '—'; }
 
 ## Weekly Report (`scripts/haftalik_piyasa_raporu.py`)
 
-A `no_agent` cron job that runs every Monday 09:00. Fetches all 5 APIs and compiles a Telegram-formatted market report.
+A scheduled job that runs every Monday 09:00. Fetches all 5 APIs and compiles a notification-formatted market report. Works with any scheduler (system cron, Hermes, CI).
 
 **Content:**
 - Summary stats (total listings, neighborhoods, avg/min/max price, sqm, score)
@@ -150,22 +150,26 @@ A `no_agent` cron job that runs every Monday 09:00. Fetches all 5 APIs and compi
 - Top 5 bargains (biggest price drops)
 - Best value neighborhoods (score / (ppm × distance) heuristic)
 
-**Cron creation:**
-```
-cronjob(action='create', name='Haftalık Çankaya Konut Raporu',
+**Scheduling:**
+```bash
+# System cron:
+0 9 * * 1 cd <calisma_dizini> && python3 haftalik_piyasa_raporu.py
+
+# Hermes:
+cronjob(action='create', name='Haftalık {SEHIR} Konut Raporu',
         script='haftalik_piyasa_raporu.py', no_agent=True,
-        schedule='0 9 * * 1', deliver='telegram:-1003839224584',
-        workdir='/home/batu/.hermes')
+        schedule='0 9 * * 1', deliver='<KANAL>',
+        workdir='<WORKDIR>')
 ```
 
 ## Server Management
 
 ```bash
 # Start (background)
-cd ~/.hermes && python3 cankaya_server.py &
+cd <calisma_dizini> && nohup python3 sehir_server.py &
 
 # Stop
-pkill -f cankaya_server.py
+pkill -f sehir_server.py
 
 # Or find PID on port
 lsof -ti:8200 | xargs kill -9
@@ -177,7 +181,7 @@ lsof -ti:8200 | xargs kill -9
 
 | File | Path | Purpose |
 |------|------|---------|
-| Server | `~/.hermes/cankaya_server.py` | HTTP server, all API endpoints |
-| Frontend | `~/.hermes/cankaya_harita.html` | Leaflet + Chart.js UI (4 tabs) |
-| Report script | `~/.hermes/scripts/haftalik_piyasa_raporu.py` | Weekly market report |
-| Database | `~/.hermes/hepsiemlak.db` | 1070 listings, price_history, scan_log |
+| Server | `<calisma_dizini>/sehir_server.py` | HTTP server, all API endpoints |
+| Frontend | `<calisma_dizini>/sehir_harita.html` | Leaflet + Chart.js UI (4 tabs) |
+| Report script | `<calisma_dizini>/haftalik_piyasa_raporu.py` | Weekly market report |
+| Database | `<calisma_dizini>/hepsiemlak.db` | listings, price_history, scan_log |

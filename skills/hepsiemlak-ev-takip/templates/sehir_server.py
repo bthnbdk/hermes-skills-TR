@@ -22,7 +22,7 @@ CONFIG = {
     "ILCE": "cankaya",              # örn. "konak", "muratpasa" — boş = tüm ilçeler
     "WORK_LAT": 39.8897782,         # referans noktası (ev/iş)
     "WORK_LON": 32.8594033,
-    "DB": os.path.expanduser("~/.hermes/hepsiemlak.db"),
+    "DB": os.path.expanduser("~/hepsiemlak.db"),
     "PORT": 8200,
     "HTML_DOSYASI": "sehir_harita.html",  # bu template ile aynı dizinde olmalı
 }

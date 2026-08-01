@@ -7,7 +7,7 @@ author: Batu
 
 # HepsiEmlak Ev Takip (Tüm Türkiye)
 
-HepsiEmlak API'sinden **herhangi bir il/ilçede** satılık konut ilanlarını kontrol eden `no_agent` cron job sistemi. Python stdlib ile çalışır — requests/curl_cffi/Playwright gerektirmez. Şehir seçimi tamamen size bağlı: `SEHIR` ve `ILCE` değişkenlerini değiştirip 5 dakikada yeni bir lokasyonda çalıştırabilirsiniz.
+HepsiEmlak API'sinden **herhangi bir il/ilçede** satılık konut ilanlarını kontrol eden **zamanlanmış (cron) görev** sistemi. Python stdlib ile çalışır — requests/curl_cffi/Playwright gerektirmez. Şehir seçimi tamamen size bağlı: `SEHIR` ve `ILCE` değişkenlerini değiştirip 5 dakikada yeni bir lokasyonda çalıştırabilirsiniz. **Agent bağımsızdır** — script'i doğrudan `python3` ile çalıştırabilir, herhangi bir cron/zamanlayıcıya bağlayabilir veya Hermes Agent'ın cron özelliğini kullanabilirsiniz.
 
 ## 🎯 Şehir Yapılandırması (İlk Adım)
 
@@ -18,7 +18,7 @@ HepsiEmlak API'sinden **herhangi bir il/ilçede** satılık konut ilanlarını k
 | `MAX_PRICE` | `8000000` | Maks fiyat (TL) — şehrin piyasasına göre ayarlayın |
 | `WORK_LAT/LON` | `39.8897782, 32.8594033` | Mesafe puanı referans noktası (ev/iş yeri koordinatı) |
 | `EXCLUDED` | `{"Ümitköy", ...}` | Hariç tutulacak mahalleler (set) |
-| `DB` | `~/.hermes/hepsiemlak.db` | SQLite dosyası — şehir başına ayrı dosya önerilir |
+| `DB` | `~/hepsiemlak.db` veya kendi yolu | SQLite dosyası — şehir başına ayrı dosya önerilir |
 
 **Tüm 81 il için slug listesi:** hepsiemlak-arsa-takip skill'indeki `references/turkiye-sehirleri.csv` dosyasını da kullanabilirsiniz (aynı slug formatı).
 
@@ -167,27 +167,52 @@ full_url = f"https://www.hepsiemlak.com/{detail}"
 | `templates/hepsiemlak-fetch-template.py` | Yeni lokasyon için kopyalanabilir script şablonu (SEHIR/ILCE değişkenleri) |
 | `templates/sehir_server.py` | Leaflet+OSM harita backend — **CONFIG sözlüğü ile her şehre uyarlanır** |
 | `templates/sehir_harita.html` | Leaflet.js frontend — `__SEHIR_ADI__`/`__WORK_LAT__`/`__WORK_LON__` placeholder'ları server tarafından doldurulur |
-| `scripts/hepsiemlak_fetch.py` | Canlı script — örnek Çankaya konut (`~/.hermes/scripts/` altında) |
+| `scripts/hepsiemlak_fetch.py` | Canlı script — örnek Çankaya konut (kendi çalışma dizininizde) |
 | `scripts/haftalik_piyasa_raporu.py` | Haftalık pazar raporu scripti (cron job, her Pazartesi 09:00) |
 
-## 🤖 Cron Job Kurulumu (no_agent mode)
+## ⏰ Zamanlanmış Görev Kurulumu (Agent Bağımsız)
+
+Script bağımsız bir Python programıdır — **herhangi bir zamanlayıcıyla** çalışır. Üç seçenek:
+
+### Seçenek A — Sistem cron (her ortamda çalışır)
+
+```bash
+# 1. Script'i bir yere kopyala (örn. ~/scripts/)
+cp templates/hepsiemlak-fetch-template.py ~/scripts/hepsiemlak_fetch.py
+chmod +x ~/scripts/hepsiemlak_fetch.py
+
+# 2. crontab'a ekle (her 3 saatte)
+crontab -e
+# satır ekle:
+0 */3 * * * cd ~/scripts && python3 hepsiemlak_fetch.py >> ~/scripts/hepsiemlak_fetch.log 2>&1
+```
+
+### Seçenek B — Hermes Agent cron (Hermes kullanıyorsanız)
 
 **⛔ Kritik: Script yolu kısıtlaması**
 - Script `~/.hermes/scripts/` altında OLMALI
 - `script=` parametresine **sadece dosya adı** ver (örn: `hepsiemlak_fetch.py`)
 - **Hata:** `Blocked: script path resolves outside the scripts directory` → dosyayı `~/.hermes/scripts/` altına taşı
-- `workdir=` ayarlanmalı (örn: `/home/batu/.hermes`)
+- `workdir=` ayarlanmalı (örn: `<WORKDIR>`) — Hermes'te çalışma dizini
 
-Komut:
 ```
 cronjob(action='create', name='HepsiEmlak {SEHIR} {ILCE}', script='hepsiemlak_fetch.py',
         no_agent=True, schedule='0 */3 * * *',
-        deliver='telegram:-1003839224584', workdir='/home/batu/.hermes')
+        deliver='<KANAL>', workdir='<WORKDIR>')
 ```
+
+### Seçenek C — Herhangi bir agent / CI (Claude Code, Codex, GitHub Actions vb.)
+
+Script'i doğrudan ajan prompt'una dahil edin:
+```
+~/.hermes/skills/hepsiemlak-ev-takip/templates/hepsiemlak-fetch-template.py dosyasını oku,
+SEHIR/ILCE değişkenlerini <şehir>/<ilçe> yap, python3 ile çalıştır ve çıktıyı bana özetle.
+```
+Veya GitHub Actions / systemd timer gibi herhangi bir zamanlayıcıya bağlayın.
 
 ### ⛔ ZORUNLU: Çıktı Formatı Kuralı
 
-**no_agent script'leri ASLA** collection loop'u sırasında debug/progress satırı (`HTTP 200`, `X ilan | 0 yeni`) print etmemelidir. Console'a yazılan her şey Telegram'a gider — kullanıcı sadece **final zengin formatlı** sonucu görmeli.
+**Zamanlanmış script'ler ASLA** collection loop'u sırasında debug/progress satırı (`HTTP 200`, `X ilan | 0 yeni`) print etmemelidir. Console'a yazılan her şey bildirim kanalına gider — kullanıcı sadece **final zengin formatlı** sonucu görmeli.
 
 Kural:
 1. Loop içindeki tüm `print()` çağrılarını **kaldır** (warmup, API çağrısı, döngü ilerlemesi)
@@ -204,9 +229,8 @@ Kural:
 |---------|-------|
 | Script | `hepsiemlak_fetch.py` (kendi şehriniz için kopyalayın: `hepsiemlak_izmir_fetch.py` vb.) |
 | Schedule | `0 */3 * * *` (her 3 saat) |
-| Mode | `no_agent: true` |
-| Deliver | `telegram:-1003839224584` (kendi kanalınız) |
-| Workdir | `/home/batu/.hermes` |
+| Çalıştırma | `python3 hepsiemlak_fetch.py` (crontab, Hermes `no_agent`, CI — fark etmez) |
+| Bildirim | script stdout → kanalınız (Hermes: `deliver=<KANAL>`) |
 
 ### Haftalık Rapor Job
 
@@ -214,9 +238,8 @@ Kural:
 |---------|-------|
 | Script | `haftalik_piyasa_raporu.py` |
 | Schedule | `0 9 * * 1` (Pazartesi 09:00) |
-| Mode | `no_agent: true` |
-| Deliver | `telegram:-1003839224584` |
-| Workdir | `/home/batu/.hermes` |
+| Çalıştırma | `python3 haftalik_piyasa_raporu.py` |
+| Hermes | `cronjob(action='create', script='haftalik_piyasa_raporu.py', no_agent=True, schedule='0 9 * * 1', deliver='<KANAL>', workdir='<WORKDIR>')` |
 
 ### Parametre Açıklamaları
 
@@ -232,7 +255,7 @@ Kural:
 
 ## 🗄️ SQLite Veritabanı
 
-**Dosya:** `~/.hermes/hepsiemlak_{sehir}_{ilce}.db` (örn: `hepsiemlak_izmir_konak.db` — her lokasyon için ayrı dosya önerilir)
+**Dosya:** `~/hepsiemlak_{sehir}_{ilce}.db` (örn: `hepsiemlak_izmir_konak.db` — her lokasyon için ayrı dosya önerilir)
 
 ### Tablolar
 
@@ -398,14 +421,14 @@ Kat kısaltmaları: `Floor` → `K`, `Underground` → `Bodrum`, `Garden` → `B
 
 **Server:** `templates/sehir_server.py` — Python stdlib ``http.server`` (Flask gerekmez). **CONFIG sözlüğünü kendi şehrinize göre düzenleyin** (SEHIR_ADI, ILCE, WORK_LAT/LON, DB, PORT).
 **Frontend:** `templates/sehir_harita.html` — Leaflet.js + Esri World Topo Map + Chart.js. `__SEHIR_ADI__`, `__WORK_LAT__`, `__WORK_LON__` placeholder'ları server tarafından otomatik doldurulur.
-**Rapor:** `~/.hermes/scripts/haftalik_piyasa_raporu.py` — no_agent cron job.
+**Rapor:** `scripts/haftalik_piyasa_raporu.py` — her Pazartesi 09:00 çalışan zamanlanmış görev.
 
 ### Başlatma
 ```bash
-cp templates/sehir_server.py templates/sehir_harita.html ~/.hermes/
-cd ~/.hermes && python3 sehir_server.py &   # port CONFIG'den (varsayılan 8200)
+cp templates/sehir_server.py templates/sehir_harita.html <çalışma_dizini>/
+cd <çalışma_dizini> && python3 sehir_server.py &   # port CONFIG'den (varsayılan 8200)
 ```
-Arka planda: terminal `background=true` ile çalıştır. Yeniden başlatırken `fuser -k 8200/tcp` ile eski PID'i öldür.
+Arka planda: `nohup python3 sehir_server.py &` veya terminal `background=true` ile çalıştır. Yeniden başlatırken `fuser -k 8200/tcp` ile eski PID'i öldür.
 
 ### API Endpoints (SQLite'ten canlı veri)
 
@@ -438,10 +461,14 @@ Arka planda: terminal `background=true` ile çalıştır. Yeniden başlatırken 
 ### Haftalık Rapor Cron Job
 
 ```bash
+# Sistem cron:
+0 9 * * 1 cd <çalışma_dizini> && python3 haftalik_piyasa_raporu.py
+
+# Hermes:
 cronjob(action='create', name='Haftalık {SEHIR} Konut Raporu',
         script='haftalik_piyasa_raporu.py', no_agent=True,
-        schedule='0 9 * * 1', deliver='telegram:-1003839224584',
-        workdir='/home/batu/.hermes')
+        schedule='0 9 * * 1', deliver='<KANAL>',
+        workdir='<WORKDIR>')
 ```
 
 Pazartesi 09:00'da kanala otomatik rapor: özet, trend, en ucuz/pahalı mahalleler, en hareketli mahalleler, haftanın fırsatları, en iyi değer mahalleler.
@@ -457,14 +484,15 @@ Pazartesi 09:00'da kanala otomatik rapor: özet, trend, en ucuz/pahalı mahallel
 
 ## 📦 GitHub Yedekleme
 
-Bu skill GitHub'da yedeklenir: https://github.com/bthnbdk/hermes-skills
+Bu skill GitHub'da yedeklenir:
+- TR koleksiyonu: https://github.com/bthnbdk/hermes-skills-TR
+- Ana koleksiyon: https://github.com/bthnbdk/hermes-skills
 
-Güncelleme yapınca:
+Güncelleme yapınca (kendi fork'unuzda):
 ```bash
-cd ~/hermes-skills
-cp -r ~/.hermes/skills/devops/hepsiemlak-ev-takip/* skills/devops/hepsiemlak-ev-takip/
-cp ~/.hermes/scripts/hepsiemlak_fetch.py scripts/
-git add -A && git commit -m "update" && git push
+cd <repo_dizini>
+cp -r <skill_yolu>/* skills/hepsiemlak-ev-takip/
+git add -A && git commit -m "update hepsiemlak-ev-takip" && git push
 ```
 
 Detay: `references/github-backup.md`
@@ -476,4 +504,4 @@ Detay: `references/github-backup.md`
 - `availableForLoanStatus=APPLICABLE` sunucu tarafı filtre — response'ta dönmez
 - Cloudflare ana sayfayı 403'ler ama API'ye dokunmaz — urllib yeterli
 - Eksik koordinat (null) olan ilanlar mesafe puanı alamaz → 0 puan
-- Script `~/.hermes/scripts/` dışındaysa cron: `Blocked: script path resolves outside the scripts directory` — taşı ve `script=` parametresinde sadece dosya adı kullan
+- Hermes kullanıyorsanız: script `~/.hermes/scripts/` dışındaysa cron `Blocked: script path resolves outside the scripts directory` hatası verir — taşı ve `script=` parametresinde sadece dosya adı kullan

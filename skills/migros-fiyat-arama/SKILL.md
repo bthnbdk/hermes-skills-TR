@@ -200,7 +200,7 @@ Detaylar için `references/meal-planning.md`:
 4. Haftalık plan tablosu + maliyet özeti + alışveriş listesi oluştur
 5. Markdown dosyası olarak kaydet ve MEDIA: ile gönder
 
-Pratik referans script: `~/.hermes/scripts/temmuz_yemek_plani.py`
+Pratik referans script: `<calisma_dizini>/temmuz_yemek_plani.py` (SKILL.md'deki API detaylarıyla oluşturulur)
 
 ## En Ucuz Ürün Bulma (Cheapest Product Finder)
 
@@ -318,31 +318,31 @@ Toplam Protein: XXX,XX TL
 
 ## Watchdog / Otomatik İndirim Takibi
 
-Migros'ta belirli kategorilerdeki ürünler indirime girdiğinde otomatik bildirim almak için bir **no_agent=True watchdog script** + **cron job** kombinasyonu kullanılır.
+Migros'ta belirli kategorilerdeki ürünler indirime girdiğinde otomatik bildirim almak için bir **state tutan script** + **zamanlayıcı (cron)** kombinasyonu kullanılır. Agent bağımsızdır — script herhangi bir zamanlayıcıyla çalışır.
 
 ### Mimari
 
 ```
-cron job (no_agent=True) → script stdout → Telegram kanalı
+zamanlayıcı (cron/Hermes/CI) → script stdout → bildirim kanalı
     │                              │
     │                              └─ boşsa = sessiz (yeni yok)
     │
     └─ her tick'te çalışır
-       ~/.hermes/scripts/migros_indirim_watchdog.py
+       migros_indirim_watchdog.py
 ```
 
 Script, Migros API'sini tarar, önceki çalıştırmadaki indirim durumuyla karşılaştırır, sadece **yeni çıkan** indirimleri raporlar.
 
 ### State Yönetimi
 
-- **State file:** `~/.hermes/migros_discount_state.json`
+- **State file:** `<calisma_dizini>/migros_discount_state.json`
 - Her ürün için: discountRate, migroskop durumu, cross_promoted durumu, son görülme zamanı
 - 7 gün görülmeyen ürünler otomatik temizlenir (state şişmesin)
 - İlk çalıştırmada tüm ürünler "yeni" görünür — state dolduktan sonra gerçek yenilikler bildirilir
 
 ### Script Oluşturma
 
-Referans script: `~/.hermes/scripts/migros_indirim_watchdog.py`
+Referans script: `<calisma_dizini>/migros_indirim_watchdog.py`
 
 Script template:
 ```python
@@ -350,7 +350,7 @@ Script template:
 import json, os, subprocess, sys
 from datetime import datetime
 
-STATE_FILE = os.path.expanduser("~/.hermes/migros_discount_state.json")
+STATE_FILE = os.path.expanduser("~/migros_discount_state.json")  # kendi dizininiz
 
 # Hariç tutulacak ürün adı anahtar kelimeleri (pet maması vs.)
 EXCLUDED_KEYWORDS = ["köpek", "kedi", "kitten", "puppy", "kum", "pet", "akvaryum"]
@@ -397,22 +397,26 @@ def has_any_discount(p):
 # ... load_state, save_state, main fonksiyonları
 ```
 
-### Cron Job Kurulumu
+### Zamanlayıcı Kurulumu
 
 ```bash
+# Seçenek A — Sistem cron:
+0 9,18 * * * cd <calisma_dizini> && python3 migros_indirim_watchdog.py >> watchdog.log 2>&1
+
+# Seçenek B — Hermes:
 cronjob action=create \
   schedule="0 9,18 * * *" \
   name="migros-indirim-watchdog" \
   script=migros_indirim_watchdog.py \
   no_agent=True \
-  deliver="telegram:-1003839224584"
+  deliver="<KANAL>"
 ```
 
 Anahtar noktalar:
-- `no_agent=True` → LLM çalışmaz, sadece script çıktısı gider. Sıfır token maliyeti.
 - Script stdout boşsa → sessiz (yeni indirim yok). Doluyken → mesaj kanala gider.
 - Script `discountRate`, badge'ler ve crmDiscountTags dahil tüm indirim tiplerini kontrol eder.
 - Önceki state ile karşılaştırma yaparak sadece **yeni** indirimleri bildirir.
+- Hermes'te `no_agent=True` → LLM çalışmaz, sadece script çıktısı gider. Sıfır token maliyeti.
 
 ### Kategori Seçimi İçin İpuçları
 

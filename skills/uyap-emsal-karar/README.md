@@ -23,7 +23,11 @@ Emsal UYAP'ın web arayüzünün altındaki arama API'si tersine mühendislikle 
 ## 📥 Kurulum
 
 ```bash
+# Hermes:
 cp -r skills/uyap-emsal-karar ~/.hermes/skills/
+
+# Diğer agent'lar (Claude Code, Codex, Python vb.):
+# Skill klasörünü kendi çalışma dizininize kopyalayın, script'leri python3 ile çalıştırın.
 ```
 
 Hermes'e örnek istek:

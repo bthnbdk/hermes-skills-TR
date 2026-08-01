@@ -30,15 +30,21 @@ Skill ilk olarak Ankara Çankaya için geliştirildi, ancak **tamamen yeniden ya
 3. SQLite'da ilan geçmişi tutar → **sadece yeni ilanları** raporlar
 4. `templates/sehir_server.py` + `sehir_harita.html` ile istenirse yerel bir web paneli + harita görselleştirmesi çalıştırır
 
+**Agent bağımsız:** Script bağımsız Python'dur — `python3` ile doğrudan çalıştırabilir, sistem cron'una bağlayabilir veya Hermes/Claude Code/Codex gibi herhangi bir ajanın zamanlayıcısını kullanabilirsiniz.
+
 ## 📥 Kurulum
 
 ```bash
+# Hermes:
 cp -r skills/hepsiemlak-ev-takip ~/.hermes/skills/
+
+# Diğer agent'lar (Claude Code, Codex, Python vb.):
+# Skill klasörünü kendi çalışma dizininize kopyalayın, script'leri python3 ile çalıştırın.
 ```
 
 Ardından Hermes'e şöyle bir istek verin:
 
-> "Çankaya'da 3+1, 4.5M TL altı yeni satılık ilanları takip et — her saat kontrol et, yenileri bildirimbb'ye gönder"
+> "Çankaya'da 3+1, 4.5M TL altı yeni satılık ilanları takip et — her saat kontrol et, yenileri kanalıma gönder"
 > "İzmir Konak'ta 2+1, 3M TL altı yeni ilanları takip et"
 > "Antalya Muratpaşa'da 500 bin TL altı kiralık daireleri izle"
 

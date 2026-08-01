@@ -114,7 +114,7 @@ def collect_city(city_id):
 0 9 * * 1  python3 /path/to/biletinial_digest.py --cities 3,147,24
 ```
 
-Script mantığı: şehirleri dolaş (1.6sn arayla) → etkinlikleri topla → `tarih + mekan + tip` ile özetle → bildirimbb'ye gönder. Etkinlik yoksa **sessiz kal** (watchdog deseni).
+Script mantığı: şehirleri dolaş (1.6sn arayla) → etkinlikleri topla → `tarih + mekan + tip` ile özetle → bildirim kanalına gönder. Etkinlik yoksa **sessiz kal** (watchdog deseni).
 
 ## Pitfalls
 

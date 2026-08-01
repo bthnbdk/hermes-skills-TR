@@ -18,14 +18,15 @@
 
 ## 🚀 Kurulum
 
-1. **Hermes Agent'ı kurun** (yoksa): [dokümantasyon](https://hermes-agent.nousresearch.com/docs)
-2. **Skill'leri indirin:**
+### Hermes Agent kullanıyorsanız
+
+1. **Skill'leri indirin:**
 
 ```bash
 git clone https://github.com/bthnbdk/hermes-skills-TR.git
 ```
 
-3. **İstediğiniz skill'i Hermes'in skill klasörüne kopyalayın:**
+2. **İstediğiniz skill'i Hermes'in skill klasörüne kopyalayın:**
 
 ```bash
 cp -r hermes-skills-TR/skills/hepsiemlak-ev-takip ~/.hermes/skills/
@@ -33,9 +34,23 @@ cp -r hermes-skills-TR/skills/hepsiemlak-ev-takip ~/.hermes/skills/
 cp -r hermes-skills-TR/skills/* ~/.hermes/skills/
 ```
 
-4. **Hermes'i yeniden başlatın** (veya yeni oturum açın) — skill'ler otomatik yüklenir.
+3. **Hermes'i yeniden başlatın** (veya yeni oturum açın) — skill'ler otomatik yüklenir.
 
-5. Her skill'in README'sindeki **kurulum ve kullanım** talimatlarını izleyin. Çoğu skill cron görevi (zamanlanmış otomatik çalıştırma) ile birlikte kullanılır.
+### Başka bir agent / ortam kullanıyorsanız (Claude Code, Codex, Cursor, Python...)
+
+Skill'ler **agent bağımsızdır** — Hermes'e özel API gerektirmez:
+
+1. Repo'yu indirin, istediğiniz skill klasörünü kendi çalışma dizininize kopyalayın
+2. `templates/` içindeki script'leri `python3` ile doğrudan çalıştırın (bağımlılık yok — Python stdlib yeterli)
+3. Zamanlama için sistem cron / GitHub Actions / herhangi bir zamanlayıcı kullanın:
+
+```bash
+0 */3 * * * cd <calisma_dizini> && python3 hepsiemlak_fetch.py
+```
+
+4. Bildirim hedefini kendi kanalınıza göre ayarlayın (Telegram bot, e-posta, Slack webhook...)
+
+> ℹ️ `~/.hermes/skills/` yolları yalnızca Hermes kurulumu içindir; diğer ortamlarda skill klasörünü kendi dizininize kopyalamanız yeterli.
 
 ## 🏙️ Şehir Bazlı Skill'ler
 

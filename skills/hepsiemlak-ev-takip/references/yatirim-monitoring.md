@@ -7,7 +7,7 @@ HepsiEmlak'tan yatırım amaçlı küçük daireleri tarar. 4 şehir: Kırıkkal
 ## Script: `hepsiemlak_yatirim_tara.py`
 
 **Cron:** Her gün 15:00 (`0 15 * * *`)
-**DB:** `~/.hermes/hepsiemlak_yatirim.db`
+**DB:** `~/hepsiemlak_yatirim.db` (kendi çalışma dizininizde)
 **API:** `curl_cffi` ile Cloudflare bypass
 
 ## Puanlama Kriterleri

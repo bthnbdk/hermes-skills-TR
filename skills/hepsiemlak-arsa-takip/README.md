@@ -43,7 +43,11 @@ Arsa yatırımı yapanlar için kritik bilgi: iyi arsalar **çok hızlı tükeni
 ## 📥 Kurulum
 
 ```bash
+# Hermes:
 cp -r skills/hepsiemlak-arsa-takip ~/.hermes/skills/
+
+# Diğer agent'lar (Claude Code, Codex, Python vb.):
+# Skill klasörünü kendi çalışma dizininize kopyalayın, script'leri python3 ile çalıştırın.
 ```
 
 Hermes'e örnek istek:

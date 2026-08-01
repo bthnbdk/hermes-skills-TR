@@ -2,21 +2,15 @@
 
 Bu skill ve ilişkili script'ler GitHub'da yedeklenmektedir:
 
-**Repo:** https://github.com/bthnbdk/hermes-skills
+**Repo:** https://github.com/bthnbdk/hermes-skills-TR (Türkiye koleksiyonu)
 
 ## Repo Yapısı
 
 ```
-hermes-skills/
+hermes-skills-TR/
 ├── README.md
-├── reinstall.sh              # Tek komutla yeniden kurulum
-├── scripts/
-│   └── hepsiemlak_fetch.py   # Canlı script
-├── schemas/
-│   └── hepsiemlak_schema.sql # DB şeması (referans)
 └── skills/
-    └── devops/
-        └── hepsiemlak-ev-takip/  # Bu skill
+    └── hepsiemlak-ev-takip/  # Bu skill
 ```
 
 ## Güncelleme İş Akışı
@@ -24,11 +18,10 @@ hermes-skills/
 Skill'de bir değişiklik yapıldığında (script güncellemesi, yeni kriter, vs.):
 
 ```bash
-cd ~/hermes-skills
+cd <repo_dizini>
 
 # Güncel skill'i kopyala
-cp -r ~/.hermes/skills/devops/hepsiemlak-ev-takip/* skills/devops/hepsiemlak-ev-takip/
-cp ~/.hermes/scripts/hepsiemlak_fetch.py scripts/
+cp -r <skill_yolu>/* skills/hepsiemlak-ev-takip/
 
 # Commit & push
 git add -A
@@ -39,10 +32,10 @@ git push
 ## Kimlik Doğrulama
 
 Fine-grained PAT kullanılır (token: `github_pat_...`). Token'ın repo'ya erişimi olduğundan emin ol:
-- https://github.com/settings/tokens → token → Repository access → `hermes-skills`
+- https://github.com/settings/tokens → token → Repository access → `hermes-skills-TR`
 
 ## Notlar
 
 - DB dosyası (`hepsiemlak.db`) `.gitignore` ile dışarıda bırakılır — sadece şema yedeklenir
-- Script path: `~/.hermes/scripts/hepsiemlak_fetch.py` (cron `no_agent` modu)
-- Skill path: `~/.hermes/skills/devops/hepsiemlak-ev-takip/`
+- Script path: `<calisma_dizini>/hepsiemlak_fetch.py` (zamanlanmış görev)
+- Skill path: `<skill_yolu>/hepsiemlak-ev-takip/`

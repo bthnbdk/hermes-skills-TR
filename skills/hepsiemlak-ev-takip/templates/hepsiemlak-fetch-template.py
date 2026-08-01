@@ -26,8 +26,8 @@ ILCE = "cankaya"     # ← ilçenizi yazın (veya "")
 MAX_PRICE = 8000000  # ← maks fiyat (TL)
 API_URL = f"https://www.hepsiemlak.com/api/realty-list/{SEHIR}-satilik?counties={ILCE}&sortDirection=DESC&sortField=UPDATED_DATE&intent=satilik&mainCategory=konut&availableForLoanStatus=APPLICABLE&p32={MAX_PRICE}&pageNo=1&pageSize=50"
 MAIN_URL = f"https://www.hepsiemlak.com/{SEHIR}-satilik"
-DATA_FILE = os.path.expanduser(f"~/.hermes/hepsiemlak_{SEHIR}_{ILCE or 'tumu'}.json")
-HISTORY_FILE = os.path.expanduser(f"~/.hermes/hepsiemlak_{SEHIR}_{ILCE or 'tumu'}_history.jsonl")
+DATA_FILE = os.path.expanduser(f"~/hepsiemlak_{SEHIR}_{ILCE or 'tumu'}.json")
+HISTORY_FILE = os.path.expanduser(f"~/hepsiemlak_{SEHIR}_{ILCE or 'tumu'}_history.jsonl")
 
 # Hariç tutulan mahalleler (örnek — Ankara Çankaya için)
 EXCLUDED = {

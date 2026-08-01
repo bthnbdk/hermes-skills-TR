@@ -22,7 +22,11 @@ Bir ev satın alıp kiraya vermeyi düşünüyorsunuz. Bu skill, HepsiEmlak'taki
 ## 📥 Kurulum
 
 ```bash
+# Hermes:
 cp -r skills/hepsiemlak-yatirim-analizi ~/.hermes/skills/
+
+# Diğer agent'lar (Claude Code, Codex, Python vb.):
+# Skill klasörünü kendi çalışma dizininize kopyalayın, script'leri python3 ile çalıştırın.
 ```
 
 Hermes'e örnek istek:
